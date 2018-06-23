@@ -1,0 +1,107 @@
+extends ../layout
+block content
+    link(href='/css/treats/clinic_add.css',rel='styleSheet')
+    link(href='/css/treats/update_clinic.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：治疗业务>门诊管理>门诊详情
+            section#content
+                form.detail.formBox.update_clinic(method='POST',action='/treats/clinic/update')
+                    input.hospitalId(type='hidden',name='id',value='#{data.id}')
+                    h3 基本信息
+                    p 门诊名称：#{data.hospitalName}
+                    p 成立时间：#{moment(data.establishedTime).format('YYYY-MM-DD HH:mm:ss')}
+                    aside
+                        -var region = ''
+                        if !get_city_all_success
+                            -region= '地区获取失败'
+                        else
+                            each item in get_city_all
+                                if item.id==data.province
+                                    -region +=item.name
+                                    each city in item.children
+                                        if city.id == data.city
+                                            -region +=city.name
+                                            each district in city.children
+                                                if district.id == data.district
+                                                    -region +=district.name
+
+                        |所属地区：
+                        input.region(type='text',name='region',readonly=true,value=region)
+                        if !get_city_all_success
+                            mark.red (提示：地区获取失败)
+
+                        .area
+                            if !get_city_all_success
+                                em.red 地区获取失败
+                            else
+                                input.province(type='hidden',name='province',value=data.province)
+                                input.city(type='hidden',name='city',value=data.city)
+                                input.district(type='hidden',name='district',value=data.district)
+                                ul.provinces
+                                    each item in get_city_all
+                                        li
+                                            em(data-id=item.id) #{item.name}
+                                                i
+                                            if item.children
+                                                .citys
+                                                    ul
+                                                        each city in item.children
+                                                            li
+                                                                em(data-id=city.id) #{city.name}
+                                                                    i
+                                                                if city.children
+                                                                    .districts
+                                                                        ul
+                                                                            each district in city.children
+                                                                                li
+                                                                                    em(data-id=district.id) #{district.name}
+                    p 门诊电话：
+                      input(type='text',name='telephone',value='#{data.telephone}')
+
+                    p 详细地址：
+                      input(type='text',name='address',value='#{data.address}')
+                    p 门诊介绍：
+                      textarea(rows='5',name='description') #{data.description}
+                    div
+                        button.submitBtn 提交
+
+                .formBox.tabBox
+                    .hd.clearfix
+                        span(data-timeType='2') 门诊取样
+                        span(data-timeType='3') 上门取样
+                        span(data-timeType='1') 门诊营业
+                    .con
+                        ul
+                            include ./clinic_update_sampling_time
+
+                        ul
+                            //-li
+                                button.btn.updateBtn 编辑
+
+                        ul
+                            //-li
+                                label 时间
+                                input.startTimeM(type='text' value='09' disabled=true)
+                                | ：
+                                input.startTimeS(type='text' value='30' disabled=true)
+                                | ——
+                                input.endTimeM(type='text' value='09' disabled=true)
+                                | ：
+                                input.endTimeS(type='text' value='30' disabled=true)
+                            //-li
+                                label 星期
+                                aside
+                                    each item,index in CONST.week
+                                        -var checked = false;
+                                        input.week(type='checkbox' id=index+1,value=index+1,checked=checked,disabled=true)
+                                        label(for=index + 1) #{item}
+                            //-li
+                                button.btn.updateBtn 编辑
+
+
+
+    include ../includes/footer
+    script.
+        seajs.use(src = '/js/treat/clinic_update.js')

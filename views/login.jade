@@ -1,0 +1,22 @@
+extends layout
+block content
+    link(href='/css/login.css',rel='styleSheet')
+    .container
+        //-form.loginBox(method='POST')
+        .loginBox
+            h2 都安全后台管理系统
+            ul
+                li
+                    label 账号：
+                    input(name='user[account]' type='text',class='username',value='')
+                li
+                    label 密码：
+                    input(name='user[password]' type='password',class='password',value='')
+                li
+                    button.submitBtn(type='submit') 登录
+
+
+    include includes/footer
+    //-script(src="/js/libs/jquery.min.js")
+    script.
+        seajs.use('/js/login.js')

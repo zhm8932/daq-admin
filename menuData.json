@@ -1,0 +1,150 @@
+{
+    "data": [
+        {
+            "hContent": "筛查业务",
+            "ulData": [
+                {
+                    "title": "套餐管理",
+                    "url": "/screening/meal"
+                },
+                {
+                    "title": "预约管理",
+                    "url": "/screening/booking"
+                },
+                {
+                    "title": "订单管理",
+                    "url": "/screening/order"
+                }
+            ]
+        },
+        {
+            "hContent": "治疗业务",
+            "ulData": [
+                {
+                    "title": "门诊管理",
+                    "url": "/treats/clinic"
+                },
+                {
+                    "title": "医生管理",
+                    "url": "/treats/doctor"
+                },
+                {
+                    "title": "排班信息",
+                    "url": "/treats/scheduling"
+                },
+                {
+                    "title": "挂号订单",
+                    "url": "/treats/register"
+                }
+            ]
+        },
+        {
+            "hContent": "用户管理",
+            "ulData": [
+                {
+                    "title": "账号管理",
+                    "url": "/users/account"
+                }
+            ]
+        },
+        {
+            "hContent": "健康科普",
+            "ulData": [
+                {
+                    "title": "文章列表",
+                    "url": "/kepu/search?category=all&status=publish"
+                },
+                {
+                    "title": "新增文章",
+                    "url": "/kepu/add"
+                }
+            ]
+        },
+        {
+            "hContent": "互动管理",
+            "ulData": [
+                {
+                    "title": "指定医生咨询",
+                    "url": "/interacts/consultUser"
+                }
+            ]
+        },
+        {
+            "hContent": "活动中心",
+            "ulData": [
+                {
+                    "title": "首页Banner",
+                    "url": "/activity/index"
+                },
+                {
+                    "title": "健康科普Banner",
+                    "url": "/activity/health"
+                },
+                {
+                    "title": "新增首页Banner",
+                    "url": "/activity/add"
+                },
+                {
+                    "title": "新增优惠券",
+                    "url": "/activity/coupon/add"
+                },
+                {
+                    "title": "优惠券管理",
+                    "url": "/activity/coupons"
+                }
+            ]
+        },
+        {
+            "hContent": "系统排班",
+            "ulData": [
+                {
+                    "title": "排班管理",
+                    "url": "/scheduling/list"
+                },
+                {
+                    "title": "号源管理",
+                    "url": "/scheduling/numbers"
+                },
+                {
+                    "title": "停诊管理",
+                    "url": "/scheduling/stopup"
+                }
+            ]
+        },
+        {
+            "hContent": "数据字典",
+            "ulData": [
+                {
+                    "title": "业务数据",
+                    "url": "/sysSetting/dataDic/bizRoot?type=DAQ-ROOT"
+                },
+                {
+                    "title": "根节点管理",
+                    "url": "/sysSetting/dataDicRootView"
+                }
+            ]
+        },
+        {
+            "hContent": "系统管理",
+            "ulData": [
+                {
+                    "title": "用户管理",
+                    "url": "/systems/user"
+                },
+                {
+                    "title": "角色管理",
+                    "url": "/systems/role"
+                }
+            ]
+        },
+        {
+            "hContent":"资源管理",
+            "ulData":[
+                {"title":"菜单管理","url":"/resource/menu"},
+                {"title":"url访问管理","url":"/resource/url"},
+                {"title":"页面元素管理","url":"/resource/element"}
+            ]
+        }
+
+    ]
+}

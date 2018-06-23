@@ -1,0 +1,78 @@
+extends ../layout
+block content
+    //-link(href='/css/banner_add.css',rel='styleSheet')
+    link(href="/css/daterangepicker.css",rel="stylesheet")
+    link(href='/css/coupon_add.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：活动中心>新增优惠券
+            section#content
+                //form.formBox(method='POST',action='/activity/coupon/add')
+                .formBox
+                    ul
+                        //-li
+                            label 领取码：
+                            | 123567895544
+
+
+                        li
+                            label 优惠券类型：
+                            select#ftype(name='ftype')
+                                option(value='cash') 现金券
+                                option(value='discount') 折扣券
+                        li
+                            label 优惠券名称：
+                            input(type='text',name='name')
+                        li
+                            label 有效日期：
+                            input.startTime.w1(type='text',name='beginTime')
+                            em 至
+                            input.endTime.w1(type='text',name='endTime')
+                        li
+                            label 限领/人：
+                            input(type='text',name='limitGet',placeholder='0-1000000000的整数以内的整数')
+                            em 张
+                        li.conditionWay
+                            label 面额：
+                            input(type='text',name='faceValue')
+                            em 元
+
+                        li.conditions
+                            label 满：
+                            input(type='text',name='enoughMoney')
+                            em 元使用
+
+                        //-li
+                            label 条件：
+                            select.w1#conditions
+                                option(value='faceValue') 满
+                                option(value='discount') 最高可折扣
+                            span.conditionDec
+                                input.w1(type='text',name='mostDeduction')
+                                em 元使用
+
+                        //-li
+                            label 折扣：
+                            input(type='text',name='discount')
+                            em 折
+                        li
+                            label 发行量：
+                            input(type='text',name='amount')
+                            em 张
+                        li
+                            label 适用地区：
+                            if getCity
+                                each item in getCity
+                                    input(type='hidden',name='fitArea_id',value='#{item.id}')
+                                    input.fitArea(type='checkbox',value='#{item.name}',name='fitArea')
+                                    | #{item.name}
+                            else
+                                span.red 地区获取失败
+
+                    div
+                        button.submitBtn 发行
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/coupon_add.js')

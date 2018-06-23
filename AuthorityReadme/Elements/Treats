@@ -1,0 +1,38 @@
+//治疗业务
+
+门诊管理-搜索 ClinicSearch
+
+门诊管理-新增 ClinicAdd
+门诊管理-编辑 ClinicEdit
+门诊管理-开业 ClinicOpen
+门诊管理-停业 ClinicClose
+
+//医生管理
+医生管理-搜索 DoctorSearch
+
+医生-新增  DoctorAdd
+医生-编辑   DoctorEdit
+医生-启用   DoctorEnable
+医生-禁用   DoctorDisable
+医生-开通咨询 DoctorOpenConsult
+医生-关闭咨询 DoctorCloseConsult
+医生-优医推荐 DoctorRecommend
+医生-优医取消 DoctorCancelRecommend
+医生-收费设置 DoctorCharge
+
+
+
+//挂号订单
+
+挂号订单列表-未登记  RegisterNotRegisteredList
+挂号订单列表-已登记  RegisterHasRegosreredList
+挂号订单列表-已过期  RegisterOverdueList
+挂号订单列表-已取消  RegisterCancelList
+挂号订单列表-退款申请中    RegisterInRefundList
+挂号订单列表-已退款      RegisterHasRefundList
+挂号订单列表-已删除      RegisterHasDeleteList
+
+挂号订单-搜索         RegisterSearch
+挂号订单-门诊登记      RegisterClinicRegister
+挂号订单-门诊退款     RegisterClinicRefund
+

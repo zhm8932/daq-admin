@@ -1,0 +1,43 @@
+@import "settings.scss";
+
+.detail-main{
+  width:80%;padding-bottom: 10px;
+  dt{ width:30%;float: left; text-align: center;
+    img{ width: 50px;height: 50px; border-radius: 100%}
+  }
+  dd{ width:70%;float: left;
+    div{ float: left;width: 50%;}
+    h3{font-size: 20px;
+      em{font-size: 14px; padding-left: 20px;}
+    }
+    p{ padding: 10px 0;
+      strong{ font-size: 20px;color: $navBgOnColor;}
+      u{ text-decoration: line-through; padding: 0 10px; font-size: 16px;}
+    }
+  }
+}
+.detail-other{ padding-top: 10px;
+  .hd{
+    width: 50%;
+    span{width: 30%; margin-right:5px; float: left; border: 1px solid $bdrc1; text-align: center; line-height: 40px; cursor: pointer;
+      &.on,&:hover{
+        color: $navBgOnColor; border-color: $navBgOnColor;
+      }
+    }
+  }
+  .con{
+    padding: 10px 0;
+    div{
+      display: none;
+    }
+  }
+}
+.doctor_detail{
+  padding-bottom: 20px;
+  dt {
+    padding-top: 10px;
+    img{
+      width: 170px;height: auto;
+    }
+  }
+}

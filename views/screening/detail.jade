@@ -1,0 +1,254 @@
+extends ../layout
+block content
+    link(href='/css/swipebox.css',rel='styleSheet')
+    link(href='/css/package_detail.css',rel='styleSheet')
+    link(href='/css/responsive.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：筛查业务> 套餐管理 > 套餐详情
+            section#content
+                .detail
+                  if !success
+                      div #{JSON.stringify(data)}
+                  else
+
+                    mixin productKeyAttributeList(name)
+                      if data.productKeyAttributeList
+                          -len = data.productKeyAttributeList.length
+                          if len > 1
+                              each item,i in data.productKeyAttributeList
+                                  if item.attributeName == name
+                                      |#{item.value}
+                    mixin imgRender(images)
+                        if images&&images.length>0
+                            if images.length == 1
+                                .imgBd
+                                    ul
+                                        each item in images
+                                            li.swipebox(href=item.imageUrl): img(src='#{item.imageUrl}')
+                            else
+                                .imgBd
+                                    ul
+                                        each item in images
+                                            li.swipebox(href=item.imageUrl): img(src='#{item.imageUrl}')
+                                .imgHd
+                                    each item,index in images
+                                        span #{parseInt(index) + 1}
+                        else
+                            |暂无图片
+
+                    dl.detail-main.clearfix
+                      dt.goodsImgBox
+                        //-img(src='/images/z01.png')
+                        if data.goodsImages
+                            .imgBd
+                                ul
+                                    each item in data.goodsImages
+                                        li.swipebox(href=item.imageUrl): img(src='#{item.imageUrl}')
+                            .imgHd
+                                    each item,index in data.goodsImages
+                                        span #{parseInt(index)+1}
+
+                      dd
+                        h3 #{data.goodsName}
+                        p 编号：#{data.id}
+                        p
+                          strong #{parseFloat(data.discountPrice)/100}元
+                          u #{parseFloat(data.price)/100}元
+
+                        p 取样方式：
+                            if productKeyObj&&productKeyObj.transmit_type
+                                  each val, index in JSON.parse(productKeyObj.transmit_type)
+                                    -if(index=='sampling_home'){
+                                        span 上门取样，
+                                    -}else if(index=='sampling_delivery'){
+                                        span 快递收样，
+                                    -}else if(index=='sampling_clinic'){
+                                        span 门诊取样，
+                                    -}
+                            else
+                                |暂无取样方式
+                        p 样品种类：
+                            if productKeyObj.transmit_items
+                                - var transmit_items_obj = JSON.parse(productKeyObj.transmit_items);
+                                - var len = transmit_items_obj.length;
+                                each item,i in transmit_items_obj
+                                    if len==1
+                                        span #{item.name}
+                                    else
+                                        if i<len-1
+                                            span #{item.name}，
+                                        else
+                                            span #{item.name}
+                        p 所属栏目：
+                            if get_goods_category
+                                each arr in get_goods_category
+                                    if data.goodsReCategories
+                                        -for(var i=0,len=data.goodsReCategories.length;i<len;i++){
+                                        if data.goodsReCategories[i].categoryId == arr.id
+                                            //-em #{arr.name}
+                                            if i < len - 1
+                                                | #{arr.name}，
+                                            else
+                                                | #{arr.name}
+
+                                        -}
+
+                        p 服务门诊：
+                            if data.saleAttributes
+                                each item in data.saleAttributes
+                                    if item.attributeName == 'fit_hospital'
+                                        - var arrs = JSON.parse(item.value)
+                                        -for(var i=0,len=arrs.length;i<len;i++){
+                                        if(i < len - 1)
+                                            | #{arrs[i].hospitalName}，
+                                        else
+                                            | #{arrs[i].hospitalName}
+                                        -}
+                        p 广告语：
+                          +productKeyAttributeList('slogan')
+                        p 关键字：
+                          +productKeyAttributeList('keyword')
+                        p 网页描述：
+                          +productKeyAttributeList('page_description')
+                        p 储存条件：
+                          +productKeyAttributeList('storage_condition')
+                        //-p 服务城市：
+                          if data.saleAttributes
+                              each item in data.saleAttributes
+                                  if item.attributeName=='fit_area'
+                                      - var arrs = JSON.parse(item.value)
+                                      -for(var i=0,len=arrs.length;i<len;i++){
+                                         if(i<len-1)
+                                             | #{arrs[i].name}，
+                                         else
+                                             | #{arrs[i].name}
+                                      -}
+                                      //-each arr,i in arrs
+                                          span #{i}
+                                          span #{arr.name}
+                                    //-each val, index in data.saleAttributes[0].value
+                                        span val
+                    .tab
+                        .hd.clearfix
+                            span 详情信息（APP）
+                            span 详情信息（官网）
+                            span 详情信息（手机wap）
+                        .detail-other
+                            aside.clearfix
+                                .goodsImgBox
+                                    //-img(src='/images/z01.png')
+                                    h2 APP套餐封面图片
+                                    +imgRender(data.appCoverImages)
+                                    //-if data.appCoverImages
+                                        if data.appCoverImages.length==1
+                                            .imgBd
+                                                ul
+                                                    each item in data.appCoverImages
+                                                        li.swipebox(href=item.imageUrl): img(src='#{item.imageUrl}')
+                                    //-else
+                                        .imgBd
+                                            ul
+                                                each item in data.appCoverImages
+                                                    li.swipebox(href=item.imageUrl): img(src='#{item.imageUrl}')
+                                        .imgHd
+                                            each item,index in data.appCoverImages
+                                                span #{parseInt(index) + 1}
+
+                                .goodsImgBox
+                                    h2 APP套餐详情图片
+                                    +imgRender(data.appDetailImages)
+                            .hd.clearfix
+                                span 套餐简介
+                                span 检测须知
+                                span 相关问题
+                            aside
+                                if data.pcArticle
+                                    - var article = JSON.parse(data.appArticle)
+                                    //-div
+                                        p!= article.detail
+                                        p!= article.summary
+                                        p!= article.commonQa
+                            .con
+                                div!= app.detail
+                                div!= app.summary
+                                div!= app.commonQa
+
+                        .detail-other
+                            aside.clearfix
+                                .goodsImgBox
+                                    h2 PC套餐封面图片
+                                    +imgRender(data.pcCoverImages)
+                                .goodsImgBox
+                                    h2 PC套餐详情图片
+                                    +imgRender(data.pcDetailImages)
+                            .hd.clearfix
+                                span 套餐简介
+                                span 检测须知
+                                span 相关问题
+                            aside
+                                if data.pcArticle
+                                    - var article = JSON.parse(data.pcArticle)
+                                    //-div
+                                        p!= article.detail
+                                        p!= article.summary
+                                        p!= article.commonQa
+                                    input(type='hidden',value=article.detail)
+                                    input(type='hidden',value=article.summary)
+                                    input(type='hidden',value=article.commonQa)
+                            .con
+                                if article
+                                    div!= article.detail
+                                    div!= article.summary
+                                    div!= article.commonQa
+                        .detail-other
+                            aside.clearfix
+                                .goodsImgBox
+                                    h2 wap套餐封面图片
+                                    +imgRender(data.mobileCoverImages)
+                                .goodsImgBox
+                                    h2 wap套餐详情图片
+                                    +imgRender(data.mobileDetailImages)
+                            .hd.clearfix
+                                span 套餐简介
+                                span 检测须知
+                                span 相关问题
+                            aside
+                                if data.mobileArticle
+                                    - var article = JSON.parse(data.mobileArticle)
+                                    //-div
+                                        p!= article.detail
+                                        p!= article.summary
+                                        p!= article.commonQa
+                                    input(type='hidden',value=article.detail)
+                                    input(type='hidden',value=article.summary)
+                                    input(type='hidden',value=article.commonQa)
+                            .con
+                                if article
+                                    div!= article.detail
+                                    div!= article.summary
+                                    div!= article.commonQa
+
+                    h3 操作记录
+                    if data.goodsOperLogs
+                        table.table_th
+                              thead
+                                  tr
+                                      th 时间
+                                      th 操作人
+                                      th 处理信息
+                                      th 备注
+
+                              tbody
+                                  each item in data.goodsOperLogs
+                                      tr
+                                          td #{moment(item.createdAt).format('YYYY-MM-DD HH:mm')}
+                                          td #{item.operatorName}
+                                          td #{item.description}
+                                          td #{item.reason}
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/meal_detail.js')

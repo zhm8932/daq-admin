@@ -1,0 +1,61 @@
+extends ../layout
+block content
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：活动中心>健康科普
+            section#content
+                if eleAuthority&&eleAuthority.BannerHealthAdd
+                    .tab
+                        a.btn(href='/activity/healths/add') 新增Banner
+                if data
+                    table.table
+                        thead
+                            tr
+                                th  展示位置
+                                th  Banner图片
+                                th  状态
+                                th  操作
+                                th  点击量
+                                th  链接
+                        tbody
+                          if !data.length
+                              tr
+                                td(colspan='6') 暂无数据
+                          else
+                            each item in data
+                                tr(data-id="#{item.id}")
+                                    td #{item.displayOrder}
+                                    td: img(src="#{item.imgUrl}")
+                                    td
+                                        case item.postStatus
+                                            when '1'
+                                                span.statue.red 未发布
+                                            when '2'
+                                                span.statue 发布中
+                                            when '3'
+                                                span.statue 已关闭
+                                    td
+                                        if eleAuthority&&eleAuthority.BannerHealthEdit
+                                            a.edit(href='/activity/health/detail/#{item.id}') 编辑
+                                        case item.postStatus
+                                            when '1'
+                                                if eleAuthority&&eleAuthority.BannerHealthRelease
+                                                    a.opetate_banner(href='javascript:;',data-statue='1') 发布
+                                            when '2'
+                                                if eleAuthority&&eleAuthority.BannerHealthClose
+                                                    a.opetate_banner.red(href='javascript:;',data-statue='2') 关闭
+                                            when '3'
+                                                if eleAuthority&&eleAuthority.BannerHealthRerelease
+                                                    a.opetate_banner(href='javascript:;',data-statue='3') 重新发布
+                                    td  #{item.readNum}
+                                    td  #{item.link}
+                else
+                    | 数据获取失败
+                    aside #{JSON.stringify(errMsg)}
+                //-分页
+                include ../includes/pagination
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/banner_index.js')

@@ -1,0 +1,37 @@
+extends ../layout
+block content
+    link(href='/css/dataDic.css',rel='styleSheet')
+    link(href='/css/diyUpload.css',rel='styleSheet')
+
+    .container.dataDic
+        include ../includes/nav
+        .main
+            .position 当前位置：数据字典>根节点管理
+            section#content
+                ul.tip-box
+                    li 数据字典的数据请不要轻易改动
+                    li others字段用于存储额外字段,必须为json格式或数组格式。目前主要用于存储"type"和"imageUrl"。
+                        br
+                        |其中,"type"的作用是给其子类的type字段赋初始值,如开通地区的others字段为{"type":"district"},那所有新增的省市区的type字段的值都为"district"。
+                        br
+                        |"imageUrl"的作用是给商品栏目的子级添加banner图片。
+                    li type字段用于标识数据类型。新增时,如果父级的others字段中type有值,则子级默认引用该值。如果others的type无值,且父级的type字段有值,则的子级默认引用父级的type。请不要轻易更改。
+                        br
+                        |目前的根节点类型有:DAQ-ROOT(用于医疗项目)。目前子节点类型有:goods_category(商品栏目),article_category(文章类型),开通地区(district),sample_category(样品类型)
+
+                .toolbar
+                    if(eleAuthority && eleAuthority.DataDicRootAdd)
+                        span.btn.addBtn 添加
+                    if(eleAuthority && eleAuthority.DataDicRootUpdate)
+                        span.btn.updateBtn 修改
+                    if(eleAuthority && eleAuthority.DataDicRootDel)
+                        span.btn.delBtn.dangerBtn 删除
+                    if(eleAuthority && eleAuthority.DataDicRootUpdateState)
+                        span.btn.updateStateBtn.dangerBtn 启用/禁用
+
+                div#rootTable
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/dataDic/rootData.js');

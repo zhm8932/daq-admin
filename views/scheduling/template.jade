@@ -1,0 +1,111 @@
+extends ../layout
+block content
+    link(href="/css/DateTimePicker.css",rel="stylesheet")
+    link(href='/css/scheduling/scheduling_set_numbers.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：排班系统> 号源管理> 模板管理
+            section#content.scheduling
+                if !success
+                    aside #{JSON.stringify(data)}
+                else
+                    .formBox
+                        if !data.length
+                            table.table
+                                thead
+                                    tr
+                                        th(colspan='5')
+                                            span.lt
+                                                strong 模板：
+                                                input.name(type='text',name='name',value='')
+                                                input.id(type='hidden',name='id',value='')
+                                    tr
+                                        th(colspan='5')
+                                            span.addRow.lt  +新增一行
+                                            a.btn.saveBtn.rt(href='javascript:;')  保存模板
+                                    tr
+                                        th  开始时间
+                                        th  结束时间
+                                        th  放号数
+                                        th  挂号费用
+                                        th
+                                tbody
+                                    tr
+                                        td(colspan='5') 暂无数据
+                        else
+                          each item,index in data
+                            table.table(data-id=item.id)
+                                thead
+                                    tr
+                                        th(colspan='5')
+                                            span.lt
+                                                strong 模板#{index+1}：
+                                                input.name(type='text',name='name',value=item.name)
+                                                input.id(type='hidden',name='id',value=item.id)
+                                    tr
+                                        th(colspan='5')
+                                            span.addRow.lt  +新增一行
+                                            a.btn.saveBtn.rt(href='javascript:;')  保存模板
+                                    tr
+                                        th  开始时间
+                                        th  结束时间
+                                        th  放号数
+                                        th  挂号费用
+                                        th
+                                tbody
+
+                                  if item.regSourceTemplateDetailDTOList
+                                    each arr in item.regSourceTemplateDetailDTOList
+                                        tr
+                                            td
+                                                input.start(type='text',name='start',value=arr.start,data-field="time",readonly)
+                                                //-select.start(name='start')
+                                                    option(value='')
+                                                    each arrs in CONST.periodArr
+                                                        - bSelect = null;
+                                                        if(arrs==arr.start)
+                                                            - bSelect =true
+                                                        option(value='#{arrs}','selected'=bSelect) #{arrs}
+                                            td
+                                                input.end(type='text',name='end',value=arr.end,data-field="time",readonly)
+                                                //-select.end(name='end')
+                                                    option(value='')
+                                                    each arrs in CONST.periodArr
+                                                        - bSelect = null;
+                                                        if(arrs == arr.end)
+                                                            - bSelect =true
+                                                        option(value='#{arrs}','selected'=bSelect) #{arrs}
+
+                                            td
+                                                input.capacity(type='text',name='capacity',placeholder='放号数',value=arr.capacity)
+                                            td
+                                                input.cost(type='text',name='cost',placeholder='挂号费',value=parseFloat(arr.cost)/100)
+                                            td
+                                                a.delete(href='javascript:;') 删除
+                          table.table
+                            thead
+                                tr
+                                    th(colspan='5')
+                                        span.lt
+                                            strong 空模板：
+                                            input.name(type='text',name='name',value='')
+                                            input.id(type='hidden',name='id',value='')
+                                tr
+                                    th(colspan='5')
+                                        span.addRow.lt  +新增一行
+                                        a.btn.saveBtn.rt(href='javascript:;')  新增模板
+                                tr
+                                    th  开始时间
+                                    th  结束时间
+                                    th  放号数
+                                    th  挂号费用
+                                    th
+                            tbody
+                                tr
+                                    td(colspan='5') 在这里新增模板
+
+            #dtBox
+    include ../includes/footer
+    script.
+        seajs.use('/js/scheduling/template.js')

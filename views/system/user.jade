@@ -1,0 +1,67 @@
+extends ../layout
+block content
+    link(href='/css/resource.css',rel='styleSheet')
+    link(href='/css/diyUpload.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：系统管理>用户管理
+            section#content
+                #userTabs.tabs
+                    ul.tabs-nav.clearfix
+                        li.active(data-target="#tab1")
+                            a(href="javascript:void(0)") 用户管理
+                    .tabs-bd
+                        #tab1.tabs-bd-panel.active
+                            if(eleAuthority && eleAuthority.SystemUserSearch)
+                                .search
+                                    label 用户名称：
+                                    input.nick(type='search',name='nick',value=query.nick,placeholder="只能精确查询")
+                                    label 用户账号：
+                                    input.account(type='search',name='account',value=query.account,placeholder="只能精确查询")
+                                    label 用户状态：
+                                    select.accountStatus(name='accountStatus')
+                                        - var statusArr= [{'normal':'正常'},{'disable':'禁用'}]
+                                        option(value='') 全部
+                                        -for(var i=0,len= statusArr.length;i<len;i++){
+                                            - var bSelect = null
+                                            each index,str in statusArr[i]
+                                                if str == query.accountStatus
+                                                    - bSelect = true
+                                                option(value='#{str}','selected'=bSelect) #{index}
+                                        -}
+                                    label 用户角色：
+                                    select.roleIds(name='roleIds')
+                                        option(value='') 全部
+                                        if get_role_list_success
+                                            each item in get_role_list
+                                                option(value=item.id) #{item.name}
+                                    button.searchBtn(type='submit') 搜索
+                            .toolbar
+                                if(eleAuthority && eleAuthority.SystemUserAdd)
+                                    span.addBtn 添加
+                                if(eleAuthority && eleAuthority.SystemUserUpdate)
+                                    span.updateBtn 修改
+                                if(eleAuthority && eleAuthority.SystemUserForbidden)
+                                    span.disableBtn 禁用
+                                if(eleAuthority && eleAuthority.SystemUserEnable)
+                                    span.blue.enableBtn 启用
+                                if(eleAuthority && eleAuthority.SystemUserUpdatePsd)
+                                    span.blue.resetPasswordBtn 重置密码
+                                if(eleAuthority && eleAuthority.SystemUserAssignRole)
+                                    span.blue.assignRole 分配角色
+                            div.resource
+                                .thead
+                                    span.w1.allCheck: input(type='checkbox')
+                                    span.w3.name 用户名称
+                                    span.w3.description 用户账号
+                                    span.w3.description 创建人
+                                    span.w14.description 创建时间
+                                    //-span.w14.description 修改时间
+                                    span.w1.description 状态
+                                    span.mobile 手机号码
+                                #userList.tbody
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/systems/user.js');

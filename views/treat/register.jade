@@ -1,0 +1,114 @@
+extends ../layout
+block content
+    link(href="/css/daterangepicker.css",rel="stylesheet")
+    link(href='/css/screenings/booking.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：治疗业务>挂号订单
+            section#content
+                    if eleAuthority&&eleAuthority.RegisterSearch
+                        form(method='get',action=actionUrl).search
+                            label 订单编号：
+                            input(type='search',name='id',value=queryObj.id)
+                            label 预约手机：
+                            input(type='search',name='telNum',value=queryObj.telNum)
+                            label 预约医生：
+                            input(type='search',name='doctor',value=queryObj.doctor,placeholder='医生编号或姓名')
+                            label 预约地区：
+                            if get_hospital_all_success
+                                select(name='hospitalId',value=queryObj.hospitalId)
+                                    option(value='') 全部
+                                    each item in get_hospital_all
+                                        - var bSelect = null
+                                        if item.id == queryObj.hospitalId
+                                            - bSelect = true
+                                        option(value='#{item.id}',selected=bSelect) #{item.hospitalName}
+                            else
+                                span.red 门诊获取失败
+                            label 预约时间：
+                            input.startDate(type='text',name='reservationTime',value=queryObj.reservationTime)
+
+                            button(type='submit') 搜索
+                    .tab
+                        .hd.clearfix
+                            if eleAuthority&&eleAuthority.RegisterNotRegisteredList
+                                span: a(href='/treats/register/list/1') 未登记
+                            if eleAuthority&&eleAuthority.RegisterHasRegosreredList
+                                span: a(href='/treats/register/list/2') 已登记
+                            if eleAuthority&&eleAuthority.RegisterOverdueList
+                                span: a(href='/treats/register/list/3') 已过期
+                            if eleAuthority&&eleAuthority.RegisterCancelList
+                                span: a(href='/treats/register/list/4') 已取消
+                            if eleAuthority&&eleAuthority.RegisterInRefundList
+                                span: a(href='/treats/register/list/5') 退款申请中
+                            if eleAuthority&&eleAuthority.RegisterHasRefundList
+                                span: a(href='/treats/register/list/6') 已退款
+                            if eleAuthority&&eleAuthority.RegisterHasDeleteList
+                                span: a(href='/treats/register/list/7') 已删除
+                    if !success
+                          aside #{JSON.stringify(data)}
+                    else
+                          - var timeMsgArr=['未知','下单时间','登记时间','下单时间','取消时间','申请时间','退款时间','删除时间']
+                          table.table
+                            thead
+                                tr
+                                    th  订单编号
+                                    th  手机号码
+                                    th  预约时间
+                                    th  预约门诊
+                                    th  预约医生
+                                    //-th  状态
+                                    th  #{timeMsgArr[status]}
+                                    //-th  备注
+                                    if status>=5
+                                        th  退款金额
+                                    th  操作
+                            tbody
+                                if !data
+                                    tr
+                                        td(colspan='9') 暂无数据
+                                else
+                                        each item in data
+                                            tr(class=item.id)
+                                                td #{item.id}
+                                                td #{item.telNum}
+                                                    p: a(href='/users/account/detail/#{item.accountId}?type=register' title=item.patient target='_blank') #{item.patient}
+                                                td #{moment(item.start).format('YYYY-MM-DD HH:mm')}-#{moment(item.end).format('HH:mm')}
+                                                td
+                                                    if item.doctorDTO
+                                                        p: a(href='/treats/clinic/detail/#{item.doctorDTO.hospitalReDepartments[0].hospitalId}' target='_blank') #{item.doctorDTO.hospitalReDepartments[0].hospitalName}
+                                                        p #{item.doctorDTO.hospitalReDepartments[0].departmentName}
+                                                td
+                                                    if item.doctorDTO
+                                                        a(href='/treats/doctor/detail/#{item.doctorDTO.id}',target='_blank') #{item.doctorDTO.doctorName}
+                                                //-td #{CONST.reservationStatusArr[item.reservationStatus]}
+                                                td #{moment(item.updatedAt).format('YYYY-MM-DD HH:mm')}
+                                                //-td
+                                                    if item.remark
+                                                        |#{item.remark}
+                                                if status >= 5
+                                                    td
+                                                        if item.onlinePay==0
+                                                            |线下收费
+                                                        else
+                                                            |￥#{(item.cost/100).toFixed(2)}
+                                                            if item.payWay
+                                                              p 支付：#{item.payWay}
+                                                td(data-reservationId=item.id,data-status="#{item.reservationStatus}",data-serviceType=item.serviceType)
+                                                    p: a(href='/treats/register/detail/#{item.id}',target='_blank') 预约详情
+                                                    case item.reservationStatus
+                                                        when 1
+                                                            if eleAuthority&&eleAuthority.RegisterClinicRegister
+                                                                //-p: a.toRegister(href='javascript:;') 门诊登记
+                                                        when 3
+                                                            p: a.noteBtn(href='javascript:;') 备注
+                                                        when 5
+                                                            if eleAuthority&&eleAuthority.RegisterClinicRefund
+                                                                p: a.confirmRefund(href='javascript:;') 退款
+
+                    //-分页
+                    include ../includes/pagination
+    include ../includes/footer
+    script.
+        seajs.use('/js/treat/register.js')

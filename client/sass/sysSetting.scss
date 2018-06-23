@@ -1,0 +1,55 @@
+@import "settings.scss";
+.tab-nav{
+	margin-bottom:20px;
+	.hd{
+		width: 100%;border-radius: 6px; font-size:16px; margin-bottom:20px;//box-shadow: -1px 0 0 $bdrc2;
+		span{padding:0 20px;float: left;box-shadow: 0 0 0 1px $bdrc3; color: $bdrc3;
+			text-align: center; line-height: 36px;border-radius: 6px;
+			a{ display: block; color: #303030}
+			&.on{box-shadow: 0 0 0 1px $navBgColor; color: $navBgColor;
+				a{color: $navBgColor;}
+			}
+		}
+	}
+	.btn{@include btn($navBgColor,$navBgOnColor); line-height: 36px; float: right; margin: 0 0 10px 0}
+}
+
+#addDialog.modal.fade{
+	width:50%;
+	height:100%;
+	top:15%;
+	left:35%;
+}
+div.table-responsive{
+	//width:930px;
+	width:100%;overflow: visible;
+	.grid-table-body{
+		width:928px;
+
+	}
+}
+
+.leftMenu nav h3{
+	padding-top:20px;
+	padding-bottom:10px;
+	margin-top:0;
+	margin-bottom:0;
+}
+
+.tab{
+	.hd{
+		span{
+			a{color:#999;}
+			a:hover{color:#395f83;}
+		}
+	}
+}
+.imgUploadBox{display: block}
+.parentFileBox>.fileBoxUl>li{width: 50%;}
+.parentFileBox>.fileBoxUl>.diyUploadHover:hover .diyCancel{display: none;}
+
+.container{width: 100%;}
+@media only  screen and (min-width: 1920px){
+	.container{width: 1500px;}
+}
+

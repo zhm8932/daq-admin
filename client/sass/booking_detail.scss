@@ -1,0 +1,47 @@
+@import "settings.scss";
+#content .detail-booking h3{padding:15px 0 10px;}
+.detail-booking{
+  p{ padding: 5px 0}
+  .table_th{
+    width: 100%;border-collapse:collapse; line-height: 30px;text-align: center;
+    tr{
+      th{border: 1px solid $bdrc1; border-right:none;border-left:none;padding: 5px 10px;}
+      td{
+        padding: 0 10px;
+        img{width: 150px;height: auto;position: relative;top: 5px;}
+        em{padding:2px 5px; }
+        .statue{background-color: $navBgOnColor; padding:2px 5px; color: $color-white}
+        a{color:#004485; padding:0 6px;
+          &:hover{color: $navBgOnColor;}
+        }
+
+      }
+    }
+  }
+
+  .statue{
+    padding-bottom: 15px;
+    ul{
+      li{float:left;width: 100px;text-align: center;position: relative;
+        p{ padding: 0px; border-bottom: 1px solid $bdrc1; position: relative;
+        }
+        em{ width: 10px; height:10px;border:1px solid $bdrc1; display: inline-block;border-radius: 100%; background-color: $color-white;position: relative;top: 10px;
+
+        }
+        &.on{
+          em{
+            background-color: $navBgColor;border-color: $navBgColor;
+          }
+          p{ border-color: $navBgColor}
+
+        }
+      }
+    }
+    //.line{height: 2px; background-color: $bdrc1;}
+  }
+  aside{
+    padding: 10px 20px;
+    border-top: 1px solid $bdrc1;
+    div{text-align:right;}
+  }
+}

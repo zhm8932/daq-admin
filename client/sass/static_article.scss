@@ -1,0 +1,112 @@
+body,div, h2, h1, ol, ul, li, img, em, strong, p, a {
+  margin: 0;
+  padding: 0;
+}
+
+@media screen and (min-width: 1200px) {
+  .my-container {
+    width: 1200px;
+    margin: 0 auto;
+  }
+
+}
+
+@media screen and (min-width: 768px) {
+  .my-container {
+    font-size: 16px;
+    line-height: 30px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .my-container {
+    font-size: 14px;
+    line-height: 24px;
+  }
+}
+
+.carousel-inner .item img {
+  width: 100% ;
+}
+
+.article {
+  padding: 0 15px 30px 15px;
+  word-wrap: break-word;
+  h2 {
+    color: #333;
+    margin-top: 25px;
+  }
+  .text-center{text-align:center;}
+  .author-date {
+    max-width: 100%;
+    margin: 20px 0;
+    color: #808080;
+    .author {
+      margin-right: 15px;
+    }
+  }
+  .summary {
+    padding: 15px;
+    background-color: #f3f3f3;
+    color: #595959;
+    text-indent: 2em;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+  }
+  .content {
+    margin: 25px 0;
+    color: #333;
+    img {
+      max-width: 100% !important;
+      height:auto !important;
+    }
+    p{
+      margin:10px 0;
+    }
+    h1 {
+      margin: 10px 0;
+      font-size: 2rem;
+    }
+    h2 {
+      margin: 8px 0;
+      font-size: 1.5rem;
+    }
+    h3 {
+      margin: 6px 0;
+      font-size: 1.17rem;
+    }
+    h4 {
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+    h5{
+      margin: 4px 0;
+      font-size: 0.83rem;
+    }
+    h6 {
+      margin: 3px 0;
+      font-size: 0.75rem;
+    }
+    em {
+      font-style: italic;
+    }
+    strong {
+      font-weight: bold;
+    }
+    ul {
+      padding-left: 15px;
+      li {
+        list-style: disc;
+      }
+    }
+    ol {
+      padding-left: 15px;
+      li {
+        list-style: decimal;
+      }
+    }
+
+  }
+}
+

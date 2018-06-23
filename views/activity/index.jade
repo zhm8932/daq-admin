@@ -1,0 +1,74 @@
+extends ../layout
+block content
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：活动中心>首页Banner
+            section#content
+                if success
+                    .tab
+                        if eleAuthority&&eleAuthority.BannerIndexAdd
+                            a.btn(href='/activity/add') 新增Banner
+                        .hd.clearfix
+
+                            if getCity
+                                each item in getCity
+                                    each str,key in eleAuthority
+                                        //-div= key
+                                        //-div= item.id
+                                        if key=="BannerIndex_"+item.id
+                                            if str
+                                                span: a(href='/activity/index/#{item.id}') #{item.name}
+                    table.table
+                        thead
+                            tr
+                                th  展示位置
+                                th  Banner图片
+                                th  状态
+                                th  操作
+                                th  点击量
+                                th  链接
+                        tbody
+                            if !data.length
+                                tr
+                                    td(colspan='6') 暂无数据
+                            else
+                                each item in data
+                                    tr(data-id="#{item.id}")
+                                        td #{item.displayOrder}
+                                        td
+                                            if item.imgs.length
+                                                img(src="#{item.imgs[0].imageUrl}")
+                                        td
+                                            case item.postStatus
+                                                when '1'
+                                                    span.statue.redBg 未发布
+                                                when '2'
+                                                    span.statue 发布中
+                                                when '3'
+                                                    span.statue 已关闭
+                                        td
+                                            if eleAuthority&&eleAuthority.BannerIndexEdit
+                                                a.edit(href='/activity/index/detail/#{item.id}') 编辑
+                                            case item.postStatus
+                                                when '1'
+                                                    if eleAuthority&&eleAuthority.BannerIndexRelease
+                                                        a.opetate_banner(href='javascript:;',data-statue='1') 发布
+                                                when '2'
+                                                    if eleAuthority&&eleAuthority.BannerIndexClose
+                                                        a.opetate_banner.red(href='javascript:;',data-statue='2') 关闭
+                                                when '3'
+                                                    if eleAuthority&&eleAuthority.BannerIndexRerelease
+                                                        a.opetate_banner(href='javascript:;',data-statue='3') 重新发布
+                                        td  #{item.readNum}
+                                        td  #{item.link}
+                else
+                    | 数据获取失败
+                    aside #{JSON.stringify(errMsg)}
+                //-分页
+                include ../includes/pagination
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/banner_index.js')

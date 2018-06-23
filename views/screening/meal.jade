@@ -1,0 +1,134 @@
+extends ../layout
+block content
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：首页>筛查业务>套餐管理
+            section#content
+                .tab
+                    //-a.btn(href='/screening/meal/add') 新增套餐
+                    .hd.clearfix
+                        if eleAuthority&&eleAuthority.MealEnableList
+                            span: a(href='/screening/meal/list/2') 显示中套餐
+                        if eleAuthority&&eleAuthority.MealInAuditList
+                            span: a(href='/screening/meal/list/1') 审核中套餐
+                        if eleAuthority&&eleAuthority.MealDisableList
+                            span: a(href='/screening/meal/list/4') 已停用套餐
+                        if eleAuthority&&eleAuthority.MealAuditNoPassedList
+                            span: a(href='/screening/meal/list/3') 审核不通过
+
+                if !success
+                    aside #{msg}:#{data}
+                else
+                    table.table
+                        thead
+                            tr
+                                th  套餐名称
+                                th
+                                    if goodsState==1
+                                        | 提交时间
+                                    else
+                                        | 更新时间
+
+                                th.w2  服务门诊
+                                th  所属栏目
+                                th.w2 检查目的
+                                th.w2 服务方式
+                                th  操作
+                        tbody
+                            if !data.length
+                                tr
+                                    td(colspan='7') 暂无数据
+                            else
+                                each item in data
+                                    tr(data-goodsId="#{item.id}",data-priority='#{item.priority}')
+                                        td: a(href='/screening/meal/detail/#{item.id}',target='_blank') #{item.goodsName}
+                                            if item.priority==2
+                                                p
+                                                  span.statue 已置顶
+
+                                        td #{moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+                                        td
+                                            if item.saleAttributes
+                                                if item.saleAttributes[0].value
+                                                    //- each val, index in JSON.parse(item.saleAttributes[0].value)
+                                                    //-div= item.saleAttributes[0].value
+                                                    - var fit_hospital = JSON.parse(item.saleAttributes[0].value)
+                                                    -for(var i=0,len=fit_hospital.length;i<len;i++){
+                                                        if i<len-1
+                                                            div #{fit_hospital[i].hospitalName}，
+                                                        else
+                                                            div #{fit_hospital[i].hospitalName}
+
+                                                    -}
+
+                                        td
+
+                                            if get_goods_category
+                                                each arr in get_goods_category
+
+                                                    if item.goodsReCategories
+                                                        -for(var i=0,len=item.goodsReCategories.length;i<len;i++){
+                                                            if item.goodsReCategories[i].categoryId==arr.id
+                                                                //-em #{arr.name}
+                                                                if i < len - 1
+                                                                    | #{arr.name}，
+                                                                else
+                                                                    | #{arr.name}
+
+                                                        -}
+                                        td
+                                            if item.productKeyAttributeList
+                                                each arr in item.productKeyAttributeList
+                                                    if(arr.attributeName=='fit_people')
+                                                       | #{arr.value}
+
+                                        td
+                                            if item.productKeyAttributeList
+                                                each arrs in item.productKeyAttributeList
+                                                    //span #{typeof arrs.attributeName}
+                                                    if arrs.attributeName=='transmit_type'&&arrs.value
+                                                        - var transmit_type_obj = JSON.parse(arrs.value)
+                                                        each arr,i in transmit_type_obj
+                                                            if(i == 'sampling_clinic')
+                                                                span 门诊取样，
+                                                            if(i == 'sampling_delivery')
+                                                                span 快递收样，
+                                                            if(i=='sampling_home')
+                                                                span 上门取样，
+
+
+                                        td
+                                            //-a(href='/screening/meal/detail/#{item.id}',target='_blank') 详情
+                                            if eleAuthority&&eleAuthority.MealEdit
+                                                a(href='/screening/meal/update/#{item.id}',target='_blank') 修改
+                                            if goodsState==2
+                                                if eleAuthority&&eleAuthority.MealDisable
+                                                    a.disable(href='javascript:;') 停用
+                                                if eleAuthority&&eleAuthority.MealTop
+                                                    a.top(href='javascript:;')
+                                                      -if (item.priority==2){
+                                                            span 取消置顶
+                                                      -}else{
+                                                            span 置顶
+                                                      -}
+                                            else if goodsState==1
+                                                if eleAuthority&&eleAuthority.MealAuditPass
+                                                    a.isPass(href='javascript:;',data-goodsState='2') 通过
+                                                if eleAuthority&&eleAuthority.MealAuditNoPass
+                                                    a.isPass(href='javascript:;',data-goodsState='3') 不通过
+                                            else if goodsState==4
+                                                if eleAuthority&&eleAuthority.MealEnable
+                                                    a.enable(href='javascript:;') 启用
+
+
+
+
+
+                include ../includes/pagination
+
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/meal.js')

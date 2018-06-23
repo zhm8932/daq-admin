@@ -1,0 +1,36 @@
+if pagecount
+    //-form#goLink.goLink(action='GET')
+        input(type='text')
+        span 页
+        button(type='submit') 跳转
+    //分页逻辑
+    #pagination.pagination
+        if currentpage ==1
+            span.disabled 首页
+            span.disabled 上一页
+        else
+            a(href='?#{query}page=1') 首页
+            a(href='?#{query}page=#{parseInt(currentpage)-1}') 上一页
+        if currentpage == pagecount
+            span.disabled 下一页
+            span.disabled 末页
+        else if currentpage >= pagecount
+            span.disabled 下一页
+            a(href='?#{query}page=#{pagecount}') 末页
+        else
+            a(href='?#{query}page=#{parseInt(currentpage)+1}') 下一页
+            a(href='?#{query}page=#{pagecount}') 末页
+     
+        span.disabled #{currentpage}/#{pagecount}
+        if pagecount
+            select.select(name="select")
+                -for(var i=1;i<=pagecount;i++){
+                    - var bSelect = null
+                    if i==currentpage
+                        - bSelect = true
+                    option(value='?#{query}page=#{i}',selected=bSelect) 第#{i}页
+                -}
+
+                //option(value='http://www.baidu.com/') 2
+
+

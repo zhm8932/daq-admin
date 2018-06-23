@@ -1,0 +1,21 @@
+//活动中心
+
+//账号管理
+
+首页Banner-列表 /activity/index/*
+首页Banner-新增 /activity/add
+首页Banner-修改 /activity/index/detail/*
+
+
+健康科普banner-列表 /activity/health
+健康科普banner-新增 /activity/healths/add
+健康科普banner-修改 /activity/health/detail/*
+
+优惠券管理-列表 /activity/coupons
+优惠券管理-新增 /activity/coupons/add
+优惠券管理-详情 /activity/coupons/detail/*
+
+
+
+
+

@@ -1,0 +1,82 @@
+extends ../layout
+block content
+    link(href='/css/diyUpload.css',rel='styleSheet')
+    link(href='/css/banner_add.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：活动中心>首页banner>修改banner
+            section#content.banner_add
+                .formBox
+                    input#id(type='hidden',name='bannerObj[id]',value='#{data.id}')
+                    #container.imgUploadBox
+                        if data.imgs.length
+                            input#images(type='hidden',name='bannerObj[images]',value='[{"imageId":"#{data.imgs[0].imageId}","imageUrl":"#{data.imgs[0].imageUrl}"}]')
+                        else
+                            input#images(type='hidden',name='bannerObj[images]',value='')
+                        span#selectfiles_images.btn 选择文件
+                        span#postfiles_images.btn 开始上传
+                    #previewImage_images.parentFileBox.clearfix
+                        .fileBoxUl.fileBoxUl_previewImage_images
+                           if data.imgs.length
+                            li.diyUploadHover
+                                .viewThum
+                                .diyCancel
+                                .diySuccess
+                                .diyFileName
+                                img(src='#{data.imgUrl}')
+                    ul
+                        li
+                            label 所属地区：
+                            if getCity
+                                select#category(name="bannerObj[category]")
+                                    each item in getCity
+                                        - var bSelect = null;
+                                        if data.category==item.id
+                                            - bSelect = true
+                                        option(value='#{item.id}','selected'=bSelect) #{item.name}
+                            else
+                                span.red 地区获取失败
+                        li
+                            label 排序：
+                            input.displayOrder(type='text',name='bannerObj[displayOrder]',value='#{data.displayOrder}',placeholder='数字越小排序越靠前，默认为100,最小为0')
+                        li
+                            label 描述（标题）
+                            input.descText(type='text',name='bannerObj[descText]',value='#{data.descText}')
+                        li
+                        .tabBox
+                            .hd
+                                if data.type==1
+                                    span.on HTML页面
+                                        input(type='hidden',value='1')
+                                    span APP内部页面
+                                        input(type='hidden',value='2')
+                                else
+                                    span HTML页面
+                                        input(type='hidden',value='1')
+                                    span.on APP内部页面
+                                        input(type='hidden',value='2')
+                            .con
+                                if data.type==1
+                                    li
+                                        label HTML页面
+                                        input.link1(type='text',name='bannerObj[link]',value='#{data.link}')
+                                    li
+                                        label APP内部页面
+
+                                        input.link2(type='text',name='bannerObj[link]')
+                                else
+                                    li
+                                        label HTML页面
+                                        input.link1(type='text',name='bannerObj[link]')
+                                    li
+                                        label APP内部页面
+
+                                        input.link2(type='text',name='bannerObj[link]',value='#{data.link}')
+                    div.cc
+                        button.submitBtn 提交
+                        span.red 提交后，需要从banner页发布才会在APP上展示
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/banner.js')

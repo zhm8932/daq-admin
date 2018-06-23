@@ -1,0 +1,27 @@
+@import "../settings.scss";
+.table{
+  tbody{
+    tr{
+      td,th{
+        padding: 0px;border: 1px solid $bdrc1;
+        //em{ width: 33.3%; float: left; padding: 0px; display: inline-block;height: 30px;box-shadow: 1px 0 0 0 $bdrc2}
+      }
+      &:hover{background-color:$bgc_ef;}
+    }
+  }
+
+}
+.noneSoruce{background-color: $bgc_e7;}
+.scheduling_list{
+  .table{
+    tr{
+      td{
+        height: 60px;
+        em{height: 100%; position: relative;}
+        input{ position:absolute; left: 50%; margin-left: -5px; top:50%; margin-top: -5px;}
+      }
+
+    }
+  }
+}
+

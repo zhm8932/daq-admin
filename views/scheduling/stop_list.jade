@@ -1,0 +1,163 @@
+extends ../layout
+block content
+    link(href="/css/daterangepicker.css",rel="stylesheet")
+    link(href='/css/scheduling.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：排班系统> 停诊管理
+            section#content.scheduling
+
+                form.search(method='get',action='/scheduling/stopup')
+                    label 日期：
+                    input.startDate(type='text',name='startDate',value=queryObj.startDate)
+                    label 所属地区：
+                    if get_hospital_all_success
+                        select(name='hospitalId',value=queryObj.hospitalId)
+                            option(value='') 全部
+                            each item in get_hospital_all
+                                - var bSelect = null
+                                if item.id == queryObj.hospitalId
+                                    - bSelect = true
+                                option(value='#{item.id}',selected=bSelect) #{item.hospitalName}
+                    else
+                        span.red 门诊获取失败
+                    label 医生：
+                    input(type='search',name='doctor',value=queryObj.doctor)
+                    label 状态：
+                    select
+                        option(value='') 全部
+                        option(value='') 出诊
+                        option(value='') 已停诊
+
+                    button(type='submit') 搜索
+                if !success
+                    aside #{JSON.stringify(data)}
+                else
+                   table.table
+                    thead
+                        tr
+                            th  医生
+                            th  所属门诊
+                            th  上午
+                                p 已预约数/放号数<br>状态
+                            th  下午
+                                p 已预约数/放号数<br>状态
+                            th  晚上
+                                p 已预约数/放号数<br>状态
+
+                    tbody
+                        //-排班时段
+                        mixin period(item,i)
+                            td
+                                //-p 时段：#{item.scheduleTimeSlotDTOList[i].timeSlot}
+                                //-p i：#{i+1}
+                                if item.scheduleTimeSlotDTOList[i].serviceStatus == 0
+                                    a.bk.red(href='javascript:;',data-serviceStatus=item.scheduleTimeSlotDTOList[i].serviceStatus,data-timeSlot=item.scheduleTimeSlotDTOList[i].timeSlot)
+                                        p #{item.scheduleTimeSlotDTOList[i].consume}/#{item.scheduleTimeSlotDTOList[i].capacity}
+                                        p 已停诊
+                                else
+                                    a.bk.serverBtn(href='javascript:;',data-serviceStatus=item.scheduleTimeSlotDTOList[i].serviceStatus,data-timeSlot=item.scheduleTimeSlotDTOList[i].timeSlot)
+                                        p #{item.scheduleTimeSlotDTOList[i].consume}/#{item.scheduleTimeSlotDTOList[i].capacity}
+                                        p.state 出诊
+
+                        mixin period2(item,i)
+                                //-p 时段：#{item.scheduleTimeSlotDTOList[i].timeSlot}
+                                a.bk.serverBtn(href='javascript:;',data-serviceStatus=item.scheduleTimeSlotDTOList[i].serviceStatus,data-timeSlot=item.scheduleTimeSlotDTOList[i].timeSlot)
+                                    p #{item.scheduleTimeSlotDTOList[i].consume}/#{item.scheduleTimeSlotDTOList[i].capacity}
+                                    if item.scheduleTimeSlotDTOList[i].serviceStatus == 0
+                                        p
+                                    else
+                                        p.state 出诊
+                        mixin unperoid(item,i)
+                            td: p.tc_gray 未排班
+                        if !data.length
+                            tr
+                                td(colspan='5') 暂无数据
+                        else
+                            each item in data
+                                tr(data-doctorId=item.doctorId,data-hospitalId=item.hospitalId,data-doctorName=item.doctorName)
+                                    td
+                                        a(href='/treats/doctor/detail/#{item.doctorId}',target='_blank') #{item.doctorName}
+                                        p #{item.accountId}
+                                    td: a(href='/treats/clinic/detail/#{item.hospitalId}',target='_blank') #{item.hospitalName}
+                                    if item.regDayList[0].regTimeList
+                                        each arr,index in item.regDayList[0].regTimeList
+                                            td
+                                                if arr.hasSetSchedule
+                                                    if arr.serviceStatus
+                                                        a.bk.serverBtn(href='javascript:;',data-serviceStatus="#{arr.serviceStatus}",data-timeSlot=index+1)
+                                                            p #{arr.consume}/#{arr.capacity}
+                                                            p.state 出诊
+                                                    else
+                                                        a.bk.red(href='javascript:;')
+                                                            p #{arr.consume}/#{arr.capacity}
+                                                            p 已停诊
+                                                else
+                                                    p.tc_gray 未排班
+
+                                    //-if item.scheduleTimeSlotDTOList.length
+                                            //-each arr in item.scheduleTimeSlotDTOList
+                                            //-td
+                                               a.bk(href='javascript:;')
+                                                    p #{arr.consume}/#{arr.capacuty}
+                                                    if arr.serviceStatus == 0
+                                                        p.red 已停诊
+                                                    else
+                                                        p 出诊
+                                            //-有一个时间段的排班
+                                            if item.scheduleTimeSlotDTOList.length==1
+                                                -for(var i=0;i<3;i++){
+                                                        if(item.scheduleTimeSlotDTOList[i])
+                                                            if item.scheduleTimeSlotDTOList[i].timeSlot==1
+                                                                +period(item,i)
+                                                            else
+                                                                +unperoid(item,i)
+                                                            if item.scheduleTimeSlotDTOList[i].timeSlot == 2
+                                                                +period(item,i)
+                                                            else
+                                                                +unperoid(item,i)
+                                                            if item.scheduleTimeSlotDTOList[i].timeSlot == 3
+                                                                +period(item,i)
+                                                            else
+                                                                +unperoid(item,i)
+                                                        //-else
+                                                             +unperoid(item,i)
+                                                -}
+                                            //-有2个时间段的排班
+                                            if item.scheduleTimeSlotDTOList.length ==2
+                                                if item.scheduleTimeSlotDTOList[0].timeSlot == 1
+                                                    +period(item,0)
+                                                else
+                                                    +unperoid(item,i)
+                                                if item.scheduleTimeSlotDTOList[0].timeSlot == 2
+                                                    +period(item,0)
+                                                else if item.scheduleTimeSlotDTOList[1].timeSlot == 2
+                                                    +period(item,1)
+                                                else
+                                                    +unperoid(item,i)
+                                                if item.scheduleTimeSlotDTOList[1].timeSlot == 3
+                                                    +period(item,1)
+                                                else
+                                                    +unperoid(item,i)
+                                            //-有2个时间段的排班
+                                            if item.scheduleTimeSlotDTOList.length ==3
+                                                -for(var i=0;i<3;i++){
+                                                    +period(item,i)
+                                                -}
+
+
+
+                                    //-else
+                                        +unperoid(item,i)
+                                        +unperoid(item,i)
+                                        +unperoid(item,i)
+
+
+                include ../includes/pagination
+
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/scheduling/stop_list.js')

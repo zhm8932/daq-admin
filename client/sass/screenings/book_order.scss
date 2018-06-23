@@ -1,0 +1,22 @@
+@import "../settings.scss";
+
+.bookForm{
+  padding-bottom: 20px;
+  input{width:300px; font-size: 16px; line-height: 40px;height: 40px;}
+  .submitBtn{margin-left: 30px;}
+}
+.book_order{
+  h2{font-size: 18px;line-height: 50px;}
+}
+.yuyueBox{
+  width: 360px;margin-left: -180px;
+  ul{
+    li{
+      margin:5px 0 10px;
+      label{width:80px;display: inline-block;}
+      input,select{width: 170px;box-sizing: border-box;height: 28px;line-height: 28px;}
+      textarea{width: 170px;height: 72px;}
+      aside{display: inline-block;}
+    }
+  }
+}

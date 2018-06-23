@@ -1,0 +1,593 @@
+extends ../layout
+block content
+    //link(href='/css/package.css',rel='styleSheet')
+    link(href='/css/diyUpload.css',rel='styleSheet')
+    script(src='/libs/ueditor/ueditor.config.js',type='text/javascript',charset='utf-8')
+    script(src='/libs/ueditor/ueditor.all.min.js',type='text/javascript',charset='utf-8')
+    script(src='/libs/ueditor/lang/zh-cn/zh-cn.js',type='text/javascript',charset='utf-8')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：筛查业务> 套餐管理 > #{data.goodsName}
+            section#content #{content}
+                mixin imgRender(item)
+                    .viewThum
+                    .diyCancel
+                    .diySuccess
+                    .diyFileName #{item.id}
+                    img(src='#{item.imageUrl}')
+                mixin productKeyAttributeList(name,index)
+                    if data.productKeyAttributeList
+                        -len = data.productKeyAttributeList.length
+                        if len>1
+                            each item,i in data.productKeyAttributeList
+                                //-div= item.attributeName
+                                //-div= name
+                                if item.attributeName==name
+                                    //-input(type='text',data-id='#{item.id}',name=''+name+']',value='#{item.value}')
+                                    input(type='text',name=name,value='#{item.value}')
+                                    input(type='hidden',name=name + '_id',value='#{item.id}')
+                                //-else
+                                    input(type='text',name=name,value='')
+                        else
+                            input(type='text',name=name,value='')
+                    else
+                        input(type='text',name=name,value='')
+                    //--data.goodsImages
+                mixin imgList(images)
+                    if images
+                        - var len =  images.length
+                        each item,i in images
+                            if len == 1
+                                li.diyUploadHover
+                                    .viewThum
+                                    .diyCancel
+                                    .diySuccess
+                                    .diyFileName #{item.imageId}
+                                    img(src='#{item.imageUrl}')
+                            else
+                                if i == 0
+                                    li.diyUploadHover
+                                        +imgRender(item)
+                                        span.right
+                                else if i > 0 && i < len - 1
+                                    li.diyUploadHover
+                                        +imgRender(item)
+                                        span.left
+                                        span.right
+
+                                else if i = len - 1
+                                    li.diyUploadHover
+                                        +imgRender(item)
+                                        span.left
+                //-form.formBox(method='post',action="/screening/meal/updates/new",enctype="application/x-www-form-urlencoded")
+                .formBox
+                    //-h3 宣传图片
+                    //-#container.imgUploadBox
+                        input#goodsImages(type='hidden',name='goodsImages',value=JSON.stringify(data.appCoverImages))
+                        a#selectfiles_goodsImages.btn(href="javascript:void(0);") 选择文件
+                        a#postfiles_goodsImages.btn(href="javascript:void(0);") 开始上传
+                    //-#previewImage_goodsImages
+                    //-#previewImage_goodsImages.parentFileBox.clearfix
+                            ul.fileBoxUl.fileBoxUl_previewImage_goodsImages
+                              if data.appCoverImages
+                                - var len =  data.appCoverImages.length
+                                each item,i in data.appCoverImages
+                                    if len==1
+                                        li.diyUploadHover
+                                            .viewThum
+                                            .diyCancel
+                                            .diySuccess
+                                            .diyFileName #{item.imageId}
+                                            img(src='#{item.imageUrl}')
+                                    else
+                                        if i==0
+                                            li.diyUploadHover
+                                                +imgRender(item)
+                                                span.right
+                                        else if i>0&&i<len-1
+                                            li.diyUploadHover
+                                                +imgRender(item)
+                                                span.left
+                                                span.right
+
+                                        else if i=len-1
+                                            li.diyUploadHover
+                                                +imgRender(item)
+                                                span.left
+
+                    h3 基本信息
+                    input.id(type='hidden',name='id',value='#{data.id}')
+                    input.goodsState(type='hidden',name='goodsState',value='#{data.goodsState}')
+                    ul
+                        li
+                            label 套餐编码：
+                            input.goodsCode(type='text',name='goodsCode',value=data.goodsCode,disabled=true)
+                        li
+                            label 套餐名称：
+                            input.goodsName(type='text',name='goodsName',value='#{data.goodsName}')
+                        li
+                            label 套餐原价：
+                            input(type='text',name='price',value='#{parseInt(data.price)/100}',disabled=true)
+                        li
+                            label 套餐折后价：
+                            input(type='text',name='discountPrice',value='#{parseInt(data.discountPrice)/100}',disabled=true)
+                        li
+                            label 检查目的：
+                            //-input(type='text',name='fit_people]',value='#{data.fit_people}')
+                            +productKeyAttributeList('fit_people')
+                        li
+                            label 广告语：
+                            +productKeyAttributeList('slogan')
+                        li
+                            label Title：
+                            +productKeyAttributeList('title')
+                        li
+                            label 关键字：
+                            +productKeyAttributeList('keyword')
+
+                        li
+                            label 网页描述：
+                            +productKeyAttributeList('page_description')
+                        li
+                            label 所属栏目：
+
+                            if get_goods_category
+                                aside
+                                    each item in get_goods_category
+                                        -  var bChecked= null;
+                                        if data.goodsReCategories
+                                            each arr,i in data.goodsReCategories
+                                                if item.id ==arr.categoryId
+                                                    - bChecked =true
+                                        if bChecked
+                                            input.categoryId(id=item.id type='checkbox',name='categoryId',value='#{item.id}',checked=bChecked)
+                                            label(for=item.id) #{item.name}
+                                        else
+                                            input.categoryId(id=item.id type='checkbox',name='categoryId',value='#{item.id}')
+                                            label(for=item.id) #{item.name}
+
+                            else
+                                span.red 栏目获取失败
+
+                        //-li
+                            label 服务地区：
+                            if getCity
+                              if data.saleAttributes
+                                each item in data.saleAttributes
+                                    if item.attributeName=='fit_area'
+                                        - fit_area_id = item.id
+                                        input.fit_area_id(type='hidden',name='fit_area_id',value='#{fit_area_id}')
+                                each city in getCity
+                                    -  var bChecked = null;
+                                    if data.saleAttributes
+                                            each item in data.saleAttributes
+                                                if item.attributeName=='fit_area'
+                                                    - fit_area = JSON.parse(item.value)
+                                        -for(var i=0;i<fit_area.length;i++){
+                                            if city.name == fit_area[i].name
+                                                 - bChecked =true
+                                        -}
+                                        if bChecked==1
+                                            input.fit_area(type='checkbox',name='fit_area',value='#{city.name}',checked=bChecked)
+                                            span #{city.name}
+                                        else
+                                            input.fit_area(type='checkbox',name='fit_area',value='#{city.name}')
+                                            span #{city.name}
+                                        input.fit_area_categoryId(type='hidden',name='fit_area_categoryId',value='#{city.id}')
+                              else
+                                  each city in getCity
+                                      input.fit_area_categoryId(type='hidden',name='fit_area_categoryId',value='#{city.id}')
+                                      input.fit_area(type='checkbox',name='fit_area',value='#{city.name}')
+                                      span #{city.name}
+
+                            else
+                                span.red 地区获取失败
+                        li
+                            label 服务门诊：
+
+
+                            if data.saleAttributes&&data.saleAttributes[0].value
+                                input.saleAttributes(type='hidden',name='saleAttributes',value=JSON.stringify(data.saleAttributes))
+                                -var fit_hospital = JSON.parse(data.saleAttributes[0].value)
+                                each arr in fit_hospital
+                                    //-input.fit_hospital_id(type='hidden',name='fit_hospital_id',value='#{arr.id}')
+                                    //-input.fit_hospital_attributeName(type='hidden',name='fit_hospital_attributeName',value='#{arr.attributeName}')
+                                    input.fit_hospital(type='checkbox',name='fit_hospital',value='#{arr.hospitalName}',checked=true,disabled=true)
+                                    span= arr.hospitalName
+                            else
+                                input.saleAttributes(type='hidden',name='saleAttributes',value='')
+
+                        li
+                            label 样本种类：
+                            aside.transmitItems
+                                span.btn.addTransmitItems 添加样本种类
+                                if data.productKeyAttributeList
+                                    -len=data.productKeyAttributeList.length
+                                    if(len>1)
+                                        each item,i in data.productKeyAttributeList
+                                            if item.attributeName=="transmit_items"
+                                                input(type='hidden',name='transmit_items_id',value='#{item.id}')
+
+                                                if item.value
+                                                    //有取样项目
+                                                    each arr in JSON.parse(item.value)
+                                                        p.transmit_items_wrapper
+                                                            input.transmit_items.wid(type='text',name='transmit_items',placeholder='样品名称',value='#{arr.name}')
+                                                            | 数量：
+                                                            input.transmit_items_num(type='text',name='transmit_items_num',value='#{arr.num}')
+                                                            | 份
+                                                else
+                                                    //没有有取样项目
+                                                    if get_sample_category_success
+                                                        //-span.btn.addTransmitItems 添加项目
+                                                        p.transmit_items_wrapper
+                                                            select.transmit_items.wid(name='transmit_items')
+                                                                each item in get_sample_category
+                                                                    option(value='#{item.name}') #{item.name}
+                                                            //-input.wid(type='text',name='transmit_items',placeholder='样品名称',value='')
+                                                            | 数量：
+                                                            input.transmit_items_num(type='text',name='transmit_items_num',value='')
+                                                            | 份
+                                                    else
+                                                        span.red 样本种类获取失败
+
+                                            else if(i==0)
+                                                //没有有默认项目
+                                                if get_sample_category_success
+                                                    //-span.btn.addTransmitItems 添加项目
+                                                    p.template(style='display:none')
+                                                        select.transmit_items.wid(name='transmit_items')
+                                                            each item in get_sample_category
+                                                                option(value='#{item.name}') #{item.name}
+                                                        //-input.wid(type='text',name='transmit_items',placeholder='样品名称',value='')
+                                                        | 数量：
+                                                        input.transmit_items_num(type='text',name='transmit_items_num',value='')
+                                                        | 份
+                                                else
+                                                    span.red 样本种类获取失败
+                                    else
+                                        if get_sample_category_success
+                                            //-span.btn.addTransmitItems 添加项目
+                                            p
+                                                select.transmit_items.wid(name='transmit_items')
+                                                    each item in get_sample_category
+                                                        option(value='#{item.name}') #{item.name}
+                                                //-input.wid(type='text',name='transmit_items',placeholder='样品名称',value='')
+                                                | 数量：
+                                                input.transmit_items_num(type='text',name='transmit_items_num',value='')
+                                                | 份
+                                        else
+                                            span.red 样本种类获取失败
+
+                        li
+                            label 取样方式：
+                            aside
+                                if data.productKeyAttributeList
+                                    each item in data.productKeyAttributeList
+                                        if item.attributeName=="transmit_type"
+                                            if item.value
+                                                input(type='hidden',name='transmit_type_id',value='#{item.id}')
+                                                //-div= JSON.stringify(transmit_type)
+                                                //-each index, item in transmit_type
+                                                if transmit_type&&(transmit_type.sampling_home=='0'||transmit_type.sampling_home)
+                                                    - sampling_home_b = true;
+                                                    - sampling_home_value = transmit_type.sampling_home?parseFloat(transmit_type.sampling_home)/100 ||'':'0'
+                                                input.sampling_home#sampling_home(type='checkbox',name='sampling_home' value='sampling_home',checked=sampling_home_b)
+                                                label(for="sampling_home") 上门取样
+                                                input(type='text',name='sampling_home_cost',placeholder='0.0',value=sampling_home_value)
+
+                                                | 元 &nbsp;服务费 <br>
+                                                //-if item=='sampling_delivery'
+                                                if transmit_type&&(transmit_type.sampling_delivery=='0'||transmit_type.sampling_delivery)
+                                                    - sampling_delivery_b = true;
+                                                    - sampling_delivery_value = transmit_type.sampling_delivery?parseFloat(transmit_type.sampling_delivery)/100 ||'':'0'
+                                                input.sampling_delivery#sampling_delivery(type='checkbox',name='sampling_delivery',value='sampling_delivery',checked=sampling_delivery_b)
+                                                label(for="sampling_delivery") 快递取样
+                                                input(type='text',name='sampling_delivery_cost',placeholder='0.0',value=sampling_delivery_value)
+
+                                                | 元 &nbsp;服务费<br>
+                                                - sampling_clinic_value = ''
+                                                //-if item=='sampling_clinic'
+                                                if transmit_type&&(transmit_type.sampling_clinic=='0'||transmit_type.sampling_clinic)
+                                                    - sampling_clinic_b = true;
+                                                    - sampling_clinic_value = transmit_type.sampling_clinic?parseFloat(transmit_type.sampling_clinic)/100 ||'':'0'
+                                                input.sampling_clinic#sampling_clinic(type='checkbox',name='sampling_clinic',value='sampling_clinic',checked=sampling_clinic_b)
+                                                label(for="sampling_clinic") 门诊取样
+                                                input(type='text',name='sampling_clinic_cost',placeholder='0.0',value=sampling_clinic_value)
+                                                | 元 &nbsp;服务费<br>
+                                            else
+                                                input.sampling_home#sampling_home(type='checkbox', name='sampling_home' value='sampling_home')
+                                                label(for="sampling_home") 上门取样&nbsp;&nbsp;&nbsp;&nbsp;服务费
+                                                input(type='text',name='sampling_home_cost',placeholder='0.0',value='')
+                                                | 元 <br>
+                                                input.sampling_delivery#sampling_delivery(type='checkbox',name='sampling_delivery' value='sampling_delivery')
+                                                label(for="sampling_delivery") 快递取样&nbsp;&nbsp;&nbsp;&nbsp;服务费
+                                                input(type='text',name='sampling_delivery_cost',placeholder='0.0',value='')
+                                                | 元 <br>
+                                                input.sampling_clinic#sampling_clinic(type='checkbox',name='sampling_clinic' value='sampling_clinic')
+                                                label(for="sampling_clinic") 门诊取样&nbsp;&nbsp;&nbsp;&nbsp;服务费
+                                                input(type='text',name='sampling_clinic_cost',placeholder='0.0',value='')
+                                                | 元 <br>
+                                //-div #其他
+                                    input.sampling_home(type='checkbox',name='sampling_home' value='sampling_home',checked='checked',disabled=true)
+                                    | 上门取样
+                                    input(type='text',name='sampling_home_cost',placeholder='0.0',value=parseInt(index) / 100,disabled=true)
+
+                                    input.sampling_clinic(type='checkbox',name='sampling_clinic',value='sampling_clinic',disabled=true)
+                                    | 门诊取样
+                                    input(type='text',name='sampling_clinic_cost',placeholder='0.0',value=parseInt(index) / 100)
+                        li
+                            label 储存条件：
+                            if data.productKeyAttributeList
+                                    - var storageArr = ['样本在常温下保存','样本在0-6度下保存']
+                                    -len=data.productKeyAttributeList.length
+                                    if len>1
+                                        each item,i in data.productKeyAttributeList
+                                            if item.attributeName=="storage_condition"
+                                                    input(type='hidden',name='storage_condition_id',value='#{item.id}')
+                                                    select(name='storage_condition')
+                                                        each arr in storageArr
+                                                            - bSelect = null;
+                                                            if arr ==item.value
+                                                                - bSelect = true
+                                                            span #{bSelect}
+                                                            option(value='#{arr}','selected'=bSelect) #{arr}
+                                    else
+                                        select(name='storage_condition')
+                                            each arr in storageArr
+                                                option(value='#{arr}','selected'=bSelect) #{arr}
+
+                            else
+                                option(value='样本在常温下保存') 样本在常温下保存
+                                option(value='样本在0-6度下保存') 样本在0-6度下保存
+
+                            //-input(type='text',name='storage_condition]',placeholder='样品名称',value='#{}')
+                        .tab
+                            .hd.clearfix
+                                span 详情信息（APP）
+                                span 详情信息（官网）
+                                span 详情信息（手机wap）
+                            //-h3 详细信息
+                            .bd
+                                ul.detailBox
+                                    aside
+                                        label APP套餐封面图片：
+                                        .containerImg.imgUploadBox
+                                            input#appCoverImages(type='hidden',name='appCoverImages',value=JSON.stringify(data.appCoverImages))
+                                            a#postfiles_appCoverImages.btn(href="javascript:void(0);") 开始上传
+                                            a#selectfiles_appCoverImages.btn(href="javascript:void(0);") 选择文件
+                                        #previewImage_appCoverImages.parentFileBox.clearfix
+                                            ul.fileBoxUl.fileBoxUl_previewImage_appCoverImages
+                                                +imgList(data.appCoverImages)
+                                                //-if data.detail
+                                                    - var detail = JSON.parse(data.detail)
+                                                    - var len =  detail.length
+                                                    each item,i in detail
+                                                        if len == 1
+                                                            li.diyUploadHover
+
+                                                                +imgRender(item)
+                                                        else
+                                                            if len = 1
+                                                                li.diyUploadHover
+
+                                                                    +imgRender(item)
+                                                            else
+                                                                if i == 0
+                                                                    li.diyUploadHover
+
+                                                                        +imgRender(item)
+                                                                        span.right 右移
+                                                                else if i > 0 && i < len - 1
+                                                                    li.diyUploadHover
+
+                                                                        +imgRender(item)
+                                                                        span.left 左移
+                                                                        span.right 右移
+
+                                                                else if i = len - 1
+                                                                    li.diyUploadHover
+
+                                                                        +imgRender(item)
+                                                                        span.left 左移
+                                    aside
+                                        label APP套餐详情图片：
+                                        .containerImg.imgUploadBox
+                                            input#appDetailImages(type='hidden',name='appDetailImages',value=JSON.stringify(data.appDetailImages))
+                                            a#postfiles_appDetailImages.btn(href="javascript:void(0);") 开始上传
+                                            a#selectfiles_appDetailImages.btn(href="javascript:void(0);") 选择文件
+                                        #previewImage_appDetailImages.parentFileBox.clearfix
+                                            ul.fileBoxUl.fileBoxUl_previewImage_appDetailImages
+                                                +imgList(data.appDetailImages)
+                                    if data.appArticle&&data.appArticle!='null'
+                                        //-div=  data.appArticle
+                                        //-div=  JSON.stringify(appArticleData)
+                                        -var appArticle = JSON.parse(data.appArticle)
+                                        input.appArticle_id.article_id(type='hidden',name='app_detail_id',value=appArticle.detail)
+                                        input.appArticle_id.article_id(type='hidden',name='app_summary_id',value=appArticle.summary)
+                                        input.appArticle_id.article_id(type='hidden',name='app_commonQa_id',value=appArticle.commonQa)
+                                    else
+                                        input.appArticle_id.article_id(type='hidden',name='app_detail_id',value='')
+                                        input.appArticle_id.article_id(type='hidden',name='app_summary_id',value='')
+                                        input.appArticle_id.article_id(type='hidden',name='app_commonQa_id',value='')
+
+                                    li.detail_app.clearfix
+
+                                        label 套餐简介：
+                                        input.detail(type='hidden',name='appArticle_detail',value=app.detail)
+                                        .ueditorDivWapper
+                                            script#detail_editor.ueditorDiv(type='text/plain',style='width:100%',name='content')
+                                    li.summary_app
+                                        label 检测须知：
+
+                                        input.summary(type='hidden',name='summary',value=app.summary)
+
+                                        .ueditorDivWapper
+                                            script#summary_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                    li.commonQa_app
+                                        label 相关问题：
+                                        input.commonQa(type='hidden',name='commonQa',value=app.commonQa)
+
+                                        .ueditorDivWapper
+                                            script#commonQa_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                ul.detailBox
+                                    aside
+                                        label PC套餐封面图片：
+                                        .containerImg.imgUploadBox
+                                            input#pcCoverImages(type='hidden',name='pcCoverImages',value=JSON.stringify(data.pcCoverImages))
+                                            a#postfiles_pcCoverImages.btn(href="javascript:void(0);") 开始上传
+                                            a#selectfiles_pcCoverImages.btn(href="javascript:void(0);") 选择文件
+                                        #previewImage_pcCoverImages.parentFileBox.clearfix
+                                            ul.fileBoxUl.fileBoxUl_previewImage_pcCoverImages
+                                                +imgList(data.pcCoverImages)
+                                    aside
+                                        label PC套餐详情图片：
+                                        .containerImg.imgUploadBox
+                                            input#pcDetailImages(type='hidden',name='pcDetailImages',value=JSON.stringify(data.pcDetailImages))
+                                            a#postfiles_pcDetailImages.btn(href="javascript:void(0);") 开始上传
+                                            a#selectfiles_pcDetailImages.btn(href="javascript:void(0);") 选择文件
+                                        #previewImage_pcDetailImages.parentFileBox.clearfix
+                                            ul.fileBoxUl.fileBoxUl_previewImage_pcDetailImages
+                                                +imgList(data.pcDetailImages)
+                                    if data.appArticle&&data.appArticle!='null'
+                                        //-div=  data.pcArticle
+                                        -var pcArticle = JSON.parse(data.pcArticle)
+                                        input.pcArticle_id.article_id(type='hidden',name='pc_detail_id',value=pcArticle.detail)
+                                        input.pcArticle_id.article_id(type='hidden',name='pc_summary_id',value=pcArticle.summary)
+                                        input.pcArticle_id.article_id(type='hidden',name='pc_commonQa_id',value=pcArticle.commonQa)
+                                    else
+                                        input.pcArticle_id.article_id(type='hidden',name='pc_detail_id',value='')
+                                        input.pcArticle_id.article_id(type='hidden',name='pc_summary_id',value='')
+                                        input.pcArticle_id.article_id(type='hidden',name='pc_commonQa_id',value='')
+                                    li.detail_pc.clearfix
+                                        label 套餐简介：
+                                        //-input.detail(type='hidden',name='detail',value='套餐简介_pc')
+                                        input.detail(type='hidden',name='detail',value='')
+                                        //-input.detail(type='hidden',name='pcArticle_detail',value=pc.detail)
+
+                                        .ueditorDivWapper#detail_editor2
+                                        //script#detail_editor.ueditorDiv(type='text/plain',style='width:100%',name='content')
+                                    li.summary_pc
+                                        label 检测须知：
+                                        //-input.summary(type='hidden',name='summary',value='检测须知_pc')
+                                        input.summary(type='hidden',name='summary',value='')
+                                        //-input.summary(type='hidden',name='summary',value=pc.summary)
+
+                                        .ueditorDivWapper#summary_editor2
+                                        //script#summary_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                    li.commonQa_pc
+                                        label 相关问题：
+                                        input.commonQa(type='hidden',name='commonQa',value='')
+                                        //-input.commonQa(type='hidden',name='commonQa',value=pc.commonQa)
+
+                                        .ueditorDivWapper#commonQa_editor2
+                                        //-script#commonQa_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                ul.detailBox
+                                    aside
+                                        label wap套餐封面图片：
+                                        .containerImg.imgUploadBox
+                                            input#mobileCoverImages(type='hidden',name='mobileCoverImages',value=JSON.stringify(data.mobileCoverImages))
+                                            a#postfiles_mobileCoverImages.btn(href="javascript:void(0);") 开始上传
+                                            a#selectfiles_mobileCoverImages.btn(href="javascript:void(0);") 选择文件
+                                        #previewImage_mobileCoverImages.parentFileBox.clearfix
+                                            ul.fileBoxUl.fileBoxUl_previewImage_mobileCoverImages
+                                                +imgList(data.mobileCoverImages)
+                                    aside
+                                        label wap套餐详情图片：
+                                        .containerImg.imgUploadBox
+                                            input#mobileDetailImages(type='hidden',name='mobileDetailImages',value=JSON.stringify(data.mobileDetailImages))
+                                            a#postfiles_mobileDetailImages.btn(href="javascript:void(0);") 开始上传
+                                            a#selectfiles_mobileDetailImages.btn(href="javascript:void(0);") 选择文件
+                                        #previewImage_mobileDetailImages.parentFileBox.clearfix
+                                            ul.fileBoxUl.fileBoxUl_previewImage_mobileDetailImages
+                                                +imgList(data.mobileDetailImages)
+                                    if data.mobileArticle&&data.mobileArticle!='null'
+                                        //-div=  data.mobileArticle
+                                        -var mobileArticle = JSON.parse(data.mobileArticle)
+                                        input.mobileArticle_id.article_id(type='hidden',name='mobile_detail_id',value=mobileArticle.detail)
+                                        input.mobileArticle_id.article_id(type='hidden',name='mobile_summary_id',value=mobileArticle.summary)
+                                        input.mobileArticle_id.article_id(type='hidden',name='mobile_commonQa_id',value=mobileArticle.commonQa)
+                                    else
+                                        input.mobileArticle_id.article_id(type='hidden',name='mobile_detail_id',value='')
+                                        input.mobileArticle_id.article_id(type='hidden',name='mobile_summary_id',value='')
+                                        input.mobileArticle_id.article_id(type='hidden',name='mobile_commonQa_id',value='')
+
+                                    li.detail_wap.clearfix
+                                        label 套餐简介：
+                                        input.detail(type='hidden',name='detail',value='')
+                                        //-input.detail(type='hidden',name='detail',value=mobile.detail)
+
+                                        .ueditorDivWapper#detail_editor3
+                                        //-script#detail_editor.ueditorDiv(type='text/plain',style='width:100%',name='content')
+                                    li.summary_wap
+                                        label 检测须知：
+                                        //-input.summary(type='hidden',name='summary',value='检测须知_wap')
+                                        input.summary(type='hidden',name='summary',value='')
+                                        //-input.summary(type='hidden',name='summary',value=mobile.summary)
+
+                                        .ueditorDivWapper#summary_editor3
+                                        //-script#summary_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                    li.commonQa_wap
+                                        label 相关问题：
+                                        input.commonQa(type='hidden',name='commonQa',value='')
+                                        //-input.commonQa(type='hidden',name='commonQa',value='')
+                                        //-input.commonQa(type='hidden',name='commonQa',value=mobile.commonQa)
+
+                                        .ueditorDivWapper#commonQa_editor3
+                                        //-script#commonQa_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                        //-li
+                            label 套餐简介：
+                            #container.imgUploadBox
+                                input#detail(type='hidden',name='detail',value='#{data.detail}')
+                                a#selectfiles_detail.btn(href="javascript:void(0);") 选择文件
+                                a#postfiles_detail.btn(href="javascript:void(0);") 开始上传
+                            #previewImage_detail.parentFileBox.clearfix
+                                ul.fileBoxUl.fileBoxUl_previewImage_detail
+                                    if data.detail
+                                        - var detail = JSON.parse(data.detail)
+                                        - var len =  detail.length
+                                        each item,i in detail
+                                            if len==1
+                                                li.diyUploadHover
+
+                                                    +imgRender(item)
+                                            else
+                                                if len=1
+                                                    li.diyUploadHover
+
+                                                        +imgRender(item)
+                                                else
+                                                    if i==0
+                                                        li.diyUploadHover
+
+                                                            +imgRender(item)
+                                                            span.right 右移
+                                                    else if i>0&&i<len-1
+                                                        li.diyUploadHover
+
+                                                            +imgRender(item)
+                                                            span.left 左移
+                                                            span.right 右移
+
+                                                    else if i=len-1
+                                                        li.diyUploadHover
+
+                                                            +imgRender(item)
+                                                            span.left 左移
+
+
+                            //textarea(name='content]') #{data.detail}
+                            //-.uploadFile
+                                span.btn 添加图片
+                                input#uploadImg(type="file",name="imageUrl]")
+
+                    div.fixed_bottom
+                        button.submitBtn 提交基本信息
+                        button.btn.appBtn 保存详细信息（App）
+                        button.btn.pcBtn 保存详细信息（pc）
+                        button.btn.wapBtn 保存详细信息（wap）
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/meal_add.js')

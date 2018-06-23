@@ -1,0 +1,48 @@
+//筛查业务
+
+// 套餐管理
+
+套餐列表-显示中套餐  MealEnableList
+套餐列表-审核中套餐  MealInAuditList
+套餐列表-已停用套餐  MealDisableList
+套餐列表-审核不通过套餐  MealAuditNoPassedList
+
+套餐管理-套餐审核通过       MealAuditPass
+套餐管理-套餐审核不通过     MealAuditNoPass
+套餐管理-套餐修改    MealEdit
+套餐管理-套餐停用    MealDisable
+套餐管理-套餐置顶    MealTop
+套餐管理-套餐启用    MealEnable
+
+
+//订单管理
+
+订单列表-已支付    OrderHasPaidList
+订单列表-未支付    OrderNotPaidList
+订单列表-退款中    OrderInRefundList
+订单列表-已退款    OrderHasRefundList
+订单列表-已取消    OrderHasCancelList
+
+订单列表-订单搜索   OrderSearch
+
+订单管理-申请退款   OrderApplyRefund
+订单管理-取消退款   OrderCancelRefund
+订单管理-确认退款   OrderConfirmRefund
+
+
+
+//预约管理
+
+预约列表-未处理    BookingUnTreatedList
+预约列表-处理中    BookingInTreatedList
+预约列表-处理完    BookingHasTreatedList
+预约列表-已取消    BookingHasCancelList
+
+预约列表-订单搜索   BookingSerch
+
+预约管理-安排取样   BookingSampling
+预约管理-发货      BookingDeliver
+预约管理-门诊登记   BookingClinicRegister
+预约管理-取消预约   BookingCancel
+预约管理-修改报告状态 BookingChageStatus
+预约管理-样品入库   BookingSampleStorage

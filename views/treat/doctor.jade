@@ -1,0 +1,136 @@
+extends ../layout
+block content
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：治疗业务>医生管理
+            section#content
+                if !success
+                    aside #{JSON.stringify(data)}
+                else
+                    if eleAuthority&&eleAuthority.DoctorSearch
+                        .tab
+                            form.search(methon='get',action='/treats/doctor')
+                                label 编号：
+                                input(type='search',name='doctorCode',value=queryObj.doctorCode)
+                                label 姓名：
+                                input(type='search',name='doctorName',value=queryObj.doctorName)
+                                label 联系电话：
+                                input(type='search',name='telephone',value=queryObj.telephone)
+                                //-label 门诊：
+                                //-select(name='hospitalId')
+                                    if get_hospital_all
+                                        option(value='') 全部
+                                        each item in get_hospital_all
+                                            - var bSelect = null
+                                            if item.hospitalName==queryObj.hospitalName
+                                                - bSelect = true
+                                            span= bSelect
+                                            option(value='#{item.id}',selected=bSelect) #{item.hospitalName}
+                                    else
+                                        span.red 门诊获取失败
+                                label 筛选优医：
+                                select(name='isRecommend')
+                                    - var isRecommendArr= [{'true':'是'},{'false':'否'}]
+                                    option(value='') 全部
+                                    -for(var i=0,len= isRecommendArr.length;i<len;i++){
+                                        - var bSelect = null
+                                        each index,str in isRecommendArr[i]
+                                            if str == queryObj.isRecommend
+                                                - bSelect = true
+                                            option(value='#{str}','selected'=bSelect) #{index}
+                                    -}
+                                button(type='submit') 搜索
+
+                                //a.btn(href='/treats/doctor/add') 新增医生
+                    table.table
+                        thead
+                            tr
+                                th  头像
+                                th  医生编号
+                                th  姓名
+                                th  所属门诊
+                                th  联系电话
+                                //-th  医龄
+                                th  职称
+                                th  咨询服务
+                                th  是否强制上线收费
+                                th  操作
+                        tbody
+                            if !data.length
+                                tr
+                                    td(colspan='9') 暂无数据
+                            else
+                                each item in data
+                                    tr(data-doctorId='#{item.id}',data-doctorStatus='#{item.doctorStatus}',data-isConsult='#{item.isConsult}',data-isRecommend='#{item.isRecommend}',data-hospitalId=item.hospitalReDepartments[0].hospitalId)
+                                        td.headImg
+                                                if item.doctorPhoto
+                                                    img(src='#{item.doctorPhoto}')
+                                                else
+                                                    img(src='/images/user.png')
+                                        td #{item.doctorCode}
+                                        td
+                                            a(href="/treats/doctor/detail/#{item.id}",target='_blank') #{item.doctorName}
+                                            p
+                                                case item.doctorStatus
+                                                    when 1
+                                                        span.statue 正常
+                                                    when 2
+                                                        span.statue.redBg 禁用
+                                        td
+                                            if item.hospitalReDepartments[0]
+                                                a(href="/treats/clinic/detail/#{item.hospitalReDepartments[0].hospitalId}",target='_blank') #{item.hospitalReDepartments[0].hospitalName}
+
+                                        td= item.telephone
+                                        td #{item.title}
+                                            //-if get_doctor_title
+                                                each arr in get_doctor_title
+                                                    if item.titleId==arr.id
+                                                        span #{arr.name}
+                                        td
+                                            case item.isConsult
+                                                when true
+                                                    | 已开通
+                                                when false
+                                                    | 未开通
+                                        td
+                                            case item.needPay
+                                                when true
+                                                    em.needPayStatus.red 是
+                                                when false
+                                                    em.needPayStatus 否
+                                            span.red #{(item.cost/100).toFixed(2)}元
+                                        td(data-payInstruction=item.payInstruction)
+                                            if eleAuthority&&eleAuthority.DoctorEdit
+                                                a(href='/treats/doctor/update/#{item.id}',target='_blank') 编辑
+                                            case item.doctorStatus
+                                                when 1
+                                                    if eleAuthority&&eleAuthority.DoctorDisable
+                                                        a.isEnableBtn(href='javascript:;') 禁用
+                                                when 2
+                                                    if eleAuthority&&eleAuthority.DoctorEnable
+                                                        a.isEnableBtn.red(href='javascript:;') 启用
+                                            case item.isConsult
+                                                when true
+                                                    if eleAuthority&&eleAuthority.DoctorCloseConsult
+                                                        a.isCousultBtn.red(href='javascript:;',data-isConsult='#{item.isConsult}') 关闭咨询
+                                                when false
+                                                    if eleAuthority&&eleAuthority.DoctorOpenConsult
+                                                        a.isCousultBtn(href='javascript:;',data-isConsult='#{item.isConsult}') 开通咨询
+                                            p
+                                            case item.isRecommend
+                                                when false
+                                                    if eleAuthority&&eleAuthority.DoctorRecommend
+                                                        a.isRecomendBtn.RecommendBtn(href='javascript:;') 优医推荐
+                                                when true
+                                                    if eleAuthority&&eleAuthority.DoctorCancelRecommend
+                                                        a.isRecomendBtn.deleteRecommendBtn.red(href='javascript:;') 取消优医
+                                            if eleAuthority&&eleAuthority.DoctorCharge
+                                                a.chargeBtn(href='javascript:;',data-needPay='#{item.needPay}') 收费设置
+                //-分页
+                include ../includes/pagination
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/treat/doctor.js')

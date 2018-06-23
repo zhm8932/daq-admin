@@ -1,0 +1,132 @@
+extends ../layout
+block content
+    link(href="/css/daterangepicker.css",rel="stylesheet")
+    link(href='/css/scheduling/scheduling.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：排班系统> 排班管理
+            section#content.scheduling
+                if eleAuthority&&eleAuthority.SchedulingSearch
+                    form.search(method='get',action='/scheduling/list')
+                        label 时间段：
+                        //-input.startDate.dbDatew(type='text',name='startDate',value='2016-03-14至2016-03-20')
+                        input.startDate.dbDatew(type='text',name='startDate',value=queryObj.startDate)
+                        //-select.dateWeek(name='startDate',value=queryObj.startDate)
+                        //-input.startDate.dbDatew(type='text',name='startDate',value=queryObj.startDate)
+                        //-.dateWeek
+                            ul
+
+                        label 所属门诊：
+                        if get_hospital_all_success
+                            select(name='hospitalId',value=queryObj.hospitalId)
+                                option(value='') 全部
+                                each item in get_hospital_all
+                                    - var bSelect = null
+                                    if item.id == queryObj.hospitalId
+                                        - bSelect = true
+                                    option(value='#{item.id}',selected=bSelect) #{item.hospitalName}
+                        else
+                            span.red 门诊获取失败
+                        label 医生：
+                        input(type='text',name='doctor',value=queryObj.doctor)
+                        button(type='submit') 搜索
+                if !success
+                    aside #{JSON.stringify(data)}
+                else
+                   table.table
+                    thead
+                        tr
+                            th  医生编号
+                            th  所属门诊编号
+                            //-th  放号
+                            each w,i in weekdays
+                                    th  #{w} #{moment(w).format('ddd')}
+                                //-th  #{w} #{CONST.weekCn[i]} #{moment(w).format('ddd')}
+                            //-th  操作
+                            //-tr
+                                th
+                                th
+                                th
+                                -for(var i=0;i<7;i++){
+                                    th: em 上午
+                                    th: em 下午
+                                    th: em 晚上
+                                -}
+                    tbody
+                        mixin td(item,day)
+                            if item.scheduleItems
+                                td
+                                    -var bHas = null;
+                                    each arr,timeSlot in item.scheduleItems
+
+                                        if moment(arr.start).format('YYYY-MM-DD') == day
+                                            //p #{arr.capacity}
+                                            - bHas = true
+                                            if arr.consume==arr.capacity
+                                                p.red #{moment(arr.start).format('HH:mm')}-#{moment(arr.end).format('HH:mm')}(#{arr.consume}/#{arr.capacity})
+                                            else
+                                                p #{moment(arr.start).format('HH:mm')}-#{moment(arr.end).format('HH:mm')}(#{arr.consume}/#{arr.capacity})
+                                    if !bHas
+                                        p.noneSoruce 无排班
+                            else
+                                td 无排班
+
+                        //-div= JSON.stringify(data)
+                        if !data.length
+                            - var len = weekdays.length
+                            tr
+                                td(colspan=len+2) 暂无数据
+                        else
+                            each item in data
+                                tr(data-doctorId=item.doctorId,data-hospitalId=item.hospitalId)
+                                    td: a(href='javascript:;',target='_blank') #{item.servicerId}
+                                    td: a(href='javascript:;',target='_blank') #{item.storeId}
+                                    //-td: a(href='/scheduling/numbers/set_numbers/#{item.doctorId}',target='_blank') 设置
+                                    each w,i in weekdays
+                                            if item[w]&&item[w].length
+                                                td
+                                                    //有排班
+                                                    each arr in  item[w]
+                                                        if arr.consume == arr.capacity
+                                                            p.red #{moment(arr.start).format('HH:mm')}-#{moment(arr.end).format('HH:mm')}(#{arr.consume}/#{arr.capacity})
+                                                        else
+                                                            p #{moment(arr.start).format('HH:mm')}-#{moment(arr.end).format('HH:mm')}(#{arr.consume}/#{arr.capacity})
+                                            else
+                                                td.noneSoruce 无排班
+                                                //无排班
+                                    //-each w,i in weekdays
+                                        +td(item,w)
+                                        //-td
+                                            each arr,timeSlot in item.scheduleItems
+                                                if moment(arr.start).format('YYYY-MM-DD')=='2016-08-01'
+                                                    p #{arr.capacity}
+                                                    p #{moment(arr.start).format('YYYY-MM-DD HH:mm')}-#{moment(arr.end).format('YYYY-MM-DD HH:mm')}
+
+                                    //-td: a.saveBtn(href='javascript:;') 保存
+                                    //-td: a.editBtn(href='javascript:;') 修改
+
+                include ../includes/pagination
+
+                //-aside.clear
+                    h4 说明：
+                    p
+                        label 灰色背景块：
+                            |表示没有设置号源
+                    p
+                        label 白色背景块：
+                            |表示设置号源，但是没有放号
+                    p
+                        label 未排班：
+                            |表示设置号源，已经放号，但是没有排班
+                    p
+                        label 号源数为灰色：
+                            |表示已过期的排班
+                    p
+                        label 号源数为黑色：
+                            |表示未过期的排班
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/scheduling/list.js')

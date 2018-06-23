@@ -1,0 +1,58 @@
+extends ../layout
+block content
+    link(href='/css/kepu.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：健康科普>文章详情
+            section.arcticleDetail
+                h1 #{data.title}
+                .aside
+                    span 作者：#{data.author}
+                    span 文章来源：#{data.source}
+                    span 文章链接：
+                        a(href="#{data.url}",target="_blank") #{data.url}
+                    .popularity.rt
+                        span.likeNum #{popularity[0].praiseCount}人点赞
+                        span.linkNum #{popularity[0].favoriteCount}人收藏
+                form.btnForm(method='GET',action='/kepu/modifyView')
+                    input(type='hidden',value='#{data.id}',name='id',id="idVal")
+                    if(eleAuthority && eleAuthority.ArticleEdit)
+                        input.btn(type='submit',value='编辑')
+                each item in data.imgs
+                    div.imgDiv
+                        img(src='#{item.imageUrl}')
+                .summary
+                    |#{data.brief}
+
+                #previewEditor.preview-editor.content!= data.content
+
+                div
+                    label 相关推荐:
+                    if(eleAuthority && eleAuthority.ArticleAssoAdd)
+                        input#addAssBtn.btn(type='button',value='添加')
+                ul#assoList.articleList.assoList
+                    if assoList
+                        each item in assoList
+                            li(data-id="#{item.id}")
+                                a(href='/kepu/detail?id=#{item.id}')
+                                    .listTitle.clearfix
+                                        span #{item.title}
+                                        if(eleAuthority && eleAuthority.ArticleAssoDelete)
+                                            button.btn.del-asso.rt 删除
+                                    .listContent.clearfix
+                                        span 作者：#{item.author}
+                                        span 文章来源：#{item.source}
+                                        .lessArticle #{item.brief}
+                    else
+                        div.text-center 暂无推荐
+
+                //input#del.btn(type='button',value='删除')
+    input#categoryData(type="hidden",value="#{JSON.stringify(category)}")
+    if data.recommendIds
+        input#recommendIds(type="hidden",value="#{JSON.stringify(data.recommendIds)}")
+    else
+        input#recommendIds(type="hidden",value="#{JSON.stringify([])}")
+    include ../includes/footer
+    script.
+        seajs.use('/js/kepu_detail.js')

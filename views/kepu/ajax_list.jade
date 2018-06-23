@@ -1,0 +1,32 @@
+if data.pagecount==0
+    | 暂无数据
+else
+    each item in data.data
+        -var isRecommend = true;
+        each recommendId in recommendIds
+            if item.id === recommendId
+                -isRecommend = false;
+        if item.id === articleId
+            -isRecommend = false;
+        if isRecommend
+            li(data-id="#{item.id}")
+                .check
+                    input(type="checkbox")
+                .list
+                    .listTitle.clearfix
+                        span.lt.title #{item.title}
+                        //if (item.status == '1')
+                        //    span.lt.recommendTip (推荐中)
+                        //span.rt
+                        //    if(item.postStatus == 'publish')
+                        //        |发布中
+                        //    else if(item.postStatus == 'draft')
+                        //        |草稿
+                        //    else
+                        //        |取消发布
+                    .listContent.clearfix
+                        span 作者：
+                            span.author #{item.author}
+                        span 文章来源：
+                            span.source #{item.source}
+                        .lessArticle.brief #{item.brief}

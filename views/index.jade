@@ -1,0 +1,14 @@
+extends layout
+block content
+    .container
+        include includes/nav
+        .main
+            .position 当前位置：首页
+            section#content
+                p 首页内容#{content}
+                strong.red #{menuResourceMsg}
+
+
+    include includes/footer
+    script.
+        seajs.use('/js/index.js')

@@ -1,0 +1,16 @@
+.leftMenu
+    nav
+        //h3: <em></em> 晒查业务
+        //ul
+        //    li: a(href='/screening/meal') 套餐管理
+        //    li: a(href='/screening/order') 订单管理
+        //    li: a(href='javascript:;') 预约管理
+        if menuData
+            each item in menuData
+                h3: <em></em> #{item.name}
+                ul
+                    -var children = item.children
+                    if children
+                        -for(i=0; i<children.length; i++){
+                            li: a(href="#{children[i].url}") #{children[i].name}
+                        -}

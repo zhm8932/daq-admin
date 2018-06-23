@@ -1,0 +1,17 @@
+@import "settings.scss";
+
+$wd1:135px;
+.formBox{
+  ul li {
+    margin-bottom: 20px;
+    em{ padding: 0 3px;}
+    select{width: 307px; height: 34px;
+      &.w1{width: $wd1; margin-right: 20px;}
+    }
+    input{
+      line-height: 30px;
+      &.w1{width: $wd1}
+    }
+  }
+
+}

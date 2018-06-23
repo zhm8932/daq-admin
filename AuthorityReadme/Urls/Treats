@@ -1,0 +1,24 @@
+//治疗业务
+
+//门诊管理
+
+门诊管理-列表 /treats/clinic
+门诊管理-详情 /treats/clinic/detail/*
+门诊管理-新增 /treats/clinic/add
+门诊管理-修改 /treats/clinic/update/*
+
+
+//医生管理
+
+医生管理-列表 /treats/doctor
+医生管理-详情 /treats/doctor/detail/*
+医生管理-新增 /treats/doctor/add
+医生管理-修改 /treats/doctor/update/*
+
+//挂号订单
+
+挂号订单-列表 /treats/register/list/*
+挂号订单-详情 /treats/register/detail/*
+
+
+

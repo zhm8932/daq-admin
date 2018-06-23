@@ -1,0 +1,21 @@
+if(data.pageCount==0)
+    aside 暂无数据
+else
+    ul
+      each item in data.data
+          li(data-id=item.accountCommon.id data-accountStatus=item.accountExtends.accountStatus)
+              span.w1.check: input(type='checkbox')
+              span.w3.nick #{item.accountExtends.nick}
+              span.w3.account #{item.accountCommon.account}
+              span.w3.description #{item.description}
+              span.w14.description #{moment(item.accountCommon.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+              //-span.w14.description #{moment(item.accountCommon.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+              span.w1.accountStatus
+                  if item.accountExtends.accountStatus=='normal'
+                      em 正常
+                  else
+                      em.red 禁用
+              span.mobile #{item.accountCommon.mobile}
+
+//-用于初始化页码控件时获取总页数
+input.pageCount(type="hidden",value="#{data.pageCount}")

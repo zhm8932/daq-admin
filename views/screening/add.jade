@@ -1,0 +1,217 @@
+extends ../layout
+block content
+    //-link(href='/css/style.css',rel='styleSheet')
+    link(href='/css/diyUpload.css',rel='styleSheet')
+    script(src='/libs/ueditor/ueditor.config.js',type='text/javascript',charset='utf-8')
+    script(src='/libs/ueditor/ueditor.all.min.js',type='text/javascript',charset='utf-8')
+    script(src='/libs/ueditor/lang/zh-cn/zh-cn.js',type='text/javascript',charset='utf-8')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：筛查业务> 套餐管理 > 新增套餐
+            section#content
+                //form.formBox(method='post',action="/screening/meal/add/new")
+                .formBox
+                    h3 宣传图片
+                        span.red （图片必传）
+                    #container.imgUploadBox
+                        input#goodsImages(type='hidden',name='goodsImages')
+                        a#selectfiles_goodsImages.btn(href="javascript:void(0);") 选择文件
+                        a#postfiles_goodsImages.btn(href="javascript:void(0);") 开始上传
+                    #previewImage_goodsImages.parentFileBox.clearfix
+
+                    h3 基本信息
+                    ul
+                        //-li
+                            label 套餐编码：
+                            input(type='text',name='goodsCode',value='')
+                            em.red * 请填写与CRM相对应的套餐编码（11位数字）
+                        li
+                            label 套餐名称：
+                            input(type='text',name='goodsName',value='')
+                        li
+                            label 市场价：
+                            input(type='text',name='price',value='')
+                        li
+                            label 优惠价：
+                            input(type='text',name='discountPrice',value='')
+                        li
+                            label 广告语：
+                            input(type='text',name='slogan',value='')
+                        li
+                            label Title：
+                            input(type='text',name='title',value='',placeholder='标题不填则默认为套餐名称')
+                        li
+                            label 关键字：
+                            input(type='text',name='keyword',value='')
+                        li
+                            label 网页描述：
+                            input(type='text',name='page_description',value='')
+                        li
+                            label 检查目的：
+                            input(type='text',name='fit_people',value='')
+                        li
+                            label 所属栏目：
+                            if data.get_goods_category
+                               aside
+                                each item in data.get_goods_category
+                                    input.categoryId(type="checkbox",name="categoryId",value='#{item.id}',id=item.id)
+                                    label(for=item.id) #{item.name}
+                            else
+                                span.red 栏目获取失败
+                        li
+                            label 服务地区：
+                            if data.getCity
+                               aside
+                                each item in data.getCity
+                                    input.fit_area_id(type='hidden',name='fit_area_id',value='#{item.id}')
+                                    input.fit_area(type='checkbox',name='fit_area',value='#{item.name}',id=item.id)
+                                    label(for=item.id) #{item.name}
+                            else
+                                span.red 地区获取失败
+                            //input(type='checkbox',name='fit_area',value='深圳')
+                            //| 深圳
+                            //input(type='checkbox',name='fit_area',value='上海')
+                            //| 上海
+                            //input(type='checkbox',name='fit_area',value='南京')
+                            //| 南京
+                            //input(type='checkbox',name='fit_area',value='青岛')
+                            //| 青岛
+                        li
+                            label 样本种类：
+                            aside.transmitItems
+                                if get_sample_category_success
+                                    span.btn.addTransmitItems 添加项目
+                                    p
+                                        select.transmit_items.wid(name='transmit_items')
+                                            each item in get_sample_category
+                                                option(value='#{item.name}') #{item.name}
+                                        //-input.wid(type='text',name='transmit_items',placeholder='样品名称',value='')
+                                        | 数量：
+                                        input.transmit_items_num(type='text',name='transmit_items_num',value='')
+                                        | 份
+                                 else
+                                    span.red 样本种类获取失败
+                        li
+                            label 取样方式：
+                            aside
+                                input.sampling_home#sampling_home(type='checkbox', name='sampling_home' value='sampling_home')
+                                label(for="sampling_home") 上门取样&nbsp;&nbsp;&nbsp;&nbsp;服务费
+                                input(type='text',name='sampling_home_cost',placeholder='0.0',value='')
+                                | 元 <br>
+                                input.sampling_delivery#sampling_delivery(type='checkbox',name='sampling_delivery' value='sampling_delivery')
+                                label(for="sampling_delivery") 快递取样&nbsp;&nbsp;&nbsp;&nbsp;服务费
+                                input(type='text',name='sampling_delivery_cost',placeholder='0.0',value='')
+                                | 元 <br>
+                                input.sampling_clinic#sampling_clinic(type='checkbox',name='sampling_clinic' value='sampling_clinic')
+                                label(for="sampling_clinic") 门诊取样&nbsp;&nbsp;&nbsp;&nbsp;服务费
+                                input(type='text',name='sampling_clinic_cost',placeholder='0.0',value='')
+                                | 元 <br>
+                        li
+                            label 储存条件：
+                            select(name='storage_condition')
+                                option(value='样本在常温下保存') 样本在常温下保存
+                                option(value='样本在0-6度下保存') 样本在0-6度下保存
+                        .tab.clearfix
+                            .hd.clearfix
+                                span 详情信息（APP）
+                                span 详情信息（官网）
+                                span 详情信息（手机web）
+
+                            //-h3 详细信息
+                            .bd
+                                //-ul
+                                    li.clearfix
+                                        label 套餐简介：
+                                        input#detail(type='hidden',name='detail',value='')
+                                        .ueditorDivWapper
+                                            script#detail_editor.ueditorDiv(type='text/plain',style='width:100%',name='content')
+                                    li
+                                        label 检测须知：
+                                        input#summary(type='hidden',name='summary',value='')
+                                        .ueditorDivWapper
+                                            script#summary_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                    li
+                                        label 相关问题：
+                                        input#commonQa(type='hidden',name='commonQa',value='')
+                                        .ueditorDivWapper
+                                            script#commonQa_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                ul
+                                    li.detail_app.clearfix
+                                        label 套餐简介：
+                                        input.detail(type='hidden',name='detail',value=data.detail)
+                                        .ueditorDivWapper
+                                            script#detail_editor.ueditorDiv(type='text/plain',style='width:100%',name='content')
+                                    li.summary_app
+                                        label 检测须知：
+                                        input.summary(type='hidden',name='summary',value=data.summary)
+                                        .ueditorDivWapper
+                                            script#summary_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                    li.commonQa_app
+                                        label 相关问题：
+                                        input.commonQa(type='hidden',name='commonQa',value=data.commonQa)
+                                        .ueditorDivWapper
+                                            script#commonQa_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                ul
+                                    li.detail_pc.clearfix
+                                        label 套餐简介：
+                                        input.detail(type='hidden',name='detail',value='套餐简介_pc')
+                                        .ueditorDivWapper#detail_editor2
+                                        //script#detail_editor.ueditorDiv(type='text/plain',style='width:100%',name='content')
+                                    li.summary_pc
+                                        label 检测须知：
+                                        input.summary(type='hidden',name='summary',value='检测须知_pc')
+                                        .ueditorDivWapper#summary_editor2
+                                        //script#summary_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                    li.commonQa_pc
+                                        label 相关问题：
+                                        input.commonQa(type='hidden',name='commonQa',value='相关问题_pc')
+                                        .ueditorDivWapper#commonQa_editor2
+                                ul
+                                    li.detail_wap.clearfix
+                                        label 套餐简介：
+                                        input.detail(type='hidden',name='detail',value='套餐简介_wap')
+                                        .ueditorDivWapper#detail_editor3
+                                        //script#detail_editor.ueditorDiv(type='text/plain',style='width:100%',name='content')
+                                    li.summary_wap
+                                        label 检测须知：
+                                        input.summary(type='hidden',name='summary',value='检测须知_wap')
+                                        .ueditorDivWapper#summary_editor3
+                                        //script#summary_editor.ueditorDiv(type='text/plain',style='width:100%;',name='content')
+                                    li.commonQa_wap
+                                        label 相关问题：
+                                        input.commonQa(type='hidden',name='commonQa',value='相关问题_wap')
+                                        .ueditorDivWapper#commonQa_editor3
+                        //-li
+                            label 套餐简介：
+                            #container.imgUploadBox
+                                input#detail(type='hidden',name='detail')
+                                a#selectfiles_detail.btn(href="javascript:void(0);") 选择文件
+                                a#postfiles_detail.btn(href="javascript:void(0);") 开始上传
+                            #previewImage_detail.parentFileBox.clearfix
+                        //-li
+                            label 检测须知：
+                            #container.imgUploadBox
+                                input#summary(type='hidden',name='summary')
+                                a#selectfiles_summary.btn(href="javascript:void(0);") 选择文件
+                                a#postfiles_summary.btn(href="javascript:void(0);") 开始上传
+                            #previewImage_summary.parentFileBox.clearfix
+                        //-li
+                            label 相关问题：
+                            #container.imgUploadBox
+                                input#commonQa(type='hidden',name='commonQa')
+                                a#selectfiles_commonQa.btn(href="javascript:void(0);") 选择文件
+                                a#postfiles_commonQa.btn(href="javascript:void(0);") 开始上传
+                            #previewImage_commonQa.parentFileBox.clearfix
+                    div.fixed_bottom
+                        button.submitBtn 提交基本信息
+                        button.btn 保存详细信息（App）
+                        button.btn 保存详细信息（pc）
+                        button.btn 保存详细信息（wap）
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/meal_add.js')
+    //-script(src='/js/libs/plupload-2.1.2/js/plupload.full.min.js')
+    //-script(src='/js/upload.js')

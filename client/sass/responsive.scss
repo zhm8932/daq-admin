@@ -1,0 +1,314 @@
+@import "settings.scss";
+$conWidth:1600px;
+
+@media only  screen and (min-width: 1920px){
+  .header ul,.container,.item{ width:$conWidth; margin: 0 auto }
+  .container{ margin-top: 60px;}
+  .leftMenu nav{left: 50%; margin-left: -$conWidth/2;}
+
+}
+@media only  screen and (max-width: 1440px){
+  .table tr{
+    .w2{width: auto}
+    td{
+      word-break: break-all;
+
+    }
+  }
+}
+
+@media only  screen and (max-width: 1280px){
+  .table tr{
+    td{
+      padding:0 2px;
+    }
+  }
+  .user-detail{
+    height: auto;
+    dl{
+      display: inline-block; width: 100%;
+      dt{width: 100%; padding-bottom: 15px;}
+      dd{
+        width: 100%
+      }
+    }
+  }
+  .fixed_bottom {
+    .submitBtn{margin-left: 10px;}
+  }
+
+}
+@media only screen and (min-width: 1024px){
+
+  .tabList{
+    .hd{
+      width: 80%;
+    }
+  }
+
+}
+@media only screen and (min-width: 768px) and (max-width: 1023px){
+  $navW:130px;
+  .leftMenu nav{
+    width: $navW;
+    h3{padding-left: 50px;}
+    ul li a{ padding-left: 40px;}
+  }
+  .fixed_bottom{left: $navW+10;}
+  .main{
+    margin-left: 140px;
+  }
+  #content{
+    padding: 20px 20px 5px 10px;
+  }
+  .tabList{
+    .hd{
+      width: 100%;
+    }
+  }
+  .search{
+    input,.date{width:36%; margin-bottom: 10px}
+    label{width: 70px; display: inline-block;text-align: right;}
+
+  }
+  .authrity{
+    ul{ width: 100%;}
+  }
+
+  .user-detail{
+    dd{
+      .money{
+        span{ margin:10px 4px 0 0;}
+      }
+    }
+
+  }
+  .detail{
+    .detail-main{
+      dt{
+        width:450px;
+      }
+      dd{
+        p{padding:6px 0;}
+      }
+    }
+  }
+
+  .detail-other{
+    .con{width: 100%}
+  }
+  .finace_list{
+    table td{
+      word-break: break-all;
+    }
+  }
+  .infoBox{
+    height: 400px; margin-top: -200px;
+    ul { height: 340px;}
+  }
+
+  .table tr{
+    td{
+      padding:0 2px;border: 1px solid $bdrc1;
+    }
+  }
+  .detail-other{
+    .hd{width: 100%}
+    .goodsImgBox{
+      width: 45%;
+    }
+  }
+
+}
+
+
+@media only screen and (max-width:767px){
+  .fixed_bottom{left: 0px;}
+  .table tr{
+    td{
+      padding:0 2px;border: 1px solid $bdrc1;
+      img{width: 120px;}
+    }
+  }
+  .header{
+    button {
+      background: none;outline: none; cursor:pointer;border: none; cursor: pointer; padding: 10px; display: block; position: absolute; left: 0px; top: 0;z-index: 2;
+      .icon-bar{ width:30px; height:5px; margin:5px 0px; background-color:#fe9900; display:block}
+    }
+    .logo{font-size:20px; position: absolute;font-size: 16px;width: 80%; left: 50px; }
+    .login{ width: 50%; margin: 0; font-size:14px; position: relative;z-index: 2;
+      span{margin:10px 20px 0 0; display: block; line-height:24px;}
+      a{ display: block; line-height:24px; text-align: center;cursor: pointer;text-align: right;padding-right: 20px;}
+      em{ display: none;}
+    }
+  }
+  .tab{
+    position: relative;
+    a{
+      &.btn{position: absolute;right: 10px;top: -56px; line-height: 30px; padding: 0 10px;}
+    }
+  }
+
+  .leftMenu nav{
+    //width: 100px;
+    left: -200px; position:fixed;display: none; overflow-y: auto;
+  }
+  .main{
+    margin-left: 0px;
+    width: 100%;
+  }
+  .position{ padding-left: 10px;}
+  form{
+    label{ display: inline-block;}
+  }
+  .search{
+    input{width:30%; margin-bottom: 10px}
+  }
+  #content{ padding: 10px;}
+
+  .tabList,.table {
+    .hd{
+      width: 100%;
+    }
+    .w2{width: 10%;}
+    tr{
+      td{ padding: 0px;
+        a,em{ display: inline-block; padding: 0px;}
+      }
+    }
+
+
+  }
+  .user-detail,dl.detail-main{
+    height: auto;
+    dt{width: 100%; padding-bottom: 15px;}
+    dd{
+      width: 100%;
+
+      div{width: 100%}
+    }
+  }
+  .filter_list .hd, .feedback_complaint .hd{
+    width: 100%;
+  }
+
+  .showBox, .user{
+    .formBox{ margin: 0 10px;}
+    .dataTables_paginate, .pagination{ margin: 0px 10px 10px 0}
+    .textarea{
+      height: 20px;
+    }
+  }
+  .headImgBox {
+    //height: 280px;
+    .headImgCon ul li{ width: 50%;}
+  }
+  .finace_list{
+    table td{
+      word-break: break-all;
+    }
+  }
+  .edit_user{width:90%; margin-left: -45%; border: none;}
+
+  .detail-other{
+    .hd{
+      width: 100%;
+      span{width: 32%;margin:0}
+    }
+    .con{width: 100%}
+  }
+  .fixed_bottom {
+    .submitBtn{margin-left: 10px;padding: 2px;}
+    .btn{margin-left: 10px;padding: 2px;}
+  }
+
+
+}
+@media only screen and (max-width: 600px){
+
+  .header{
+    .logo {
+      left: 30px;
+
+    }
+    .account{
+      label{display: none;  }
+    }
+  }
+
+  .user-detail{
+    height: auto;
+    dt{ width: 100%; padding-bottom: 10px;}
+    dd{
+      width: 100%;
+      .money{ margin-top: 0px;
+        p{ padding: 5px 0}
+      }
+      p{ width: 100%; float: none;}
+    }
+  }
+
+  .tabList,.table{
+    .hd span{
+      font-size: 12px;
+      h3{ font-size: 12px;}
+    }
+    table{
+      a,.errorBtn,.operate{
+        display: inline-block;
+      }
+      td{ padding: 0px;
+        img{ width: 32px;}
+      }
+    }
+    .tabList-content{
+      li{
+        p {
+          padding: 0 100px 0 0;
+          img {
+            width: 100%;height: auto;
+          }
+        }
+      }
+    }
+  }
+  .user ul{height: 270px;}
+  .filterBox aside span{ padding: 0 15px 0 0 }
+
+  .search{
+    #add_user,.add_banner{
+      width: 90%; text-align: center; display: block;margin-bottom: 10px;
+    }
+  }
+
+}
+@media only screen and (min-width: 320px) and (max-width: 360px){
+  .search{
+    input{width: 70%; margin: 0 0 10px 0;}
+    em{ width: 25%;}
+    #searchBtn{margin: 0px; width: 96%; padding: 5px 0; text-align: center; display: block;}
+  }
+
+
+
+
+  .user-detail{
+    height: auto;
+    dt{ width: 100%;}
+    dd{
+      width: 100%;
+      p{ width: 100%}
+    }
+  }
+  .publish{
+    #upload_images{top: -45px;}
+    .webuploader-pick{padding: 5px 10px;}
+    ul{
+      li{
+        &.lBg1{ width: 130%;}
+        .reward_title{width: 100%}
+        .reward_other,.reward_money,.endTime{ width: 50%}
+      }
+    }
+  }
+}

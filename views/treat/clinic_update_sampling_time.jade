@@ -1,0 +1,38 @@
+- var day =''
+- var startTime =''
+- var endTime = ''
+if get_hospital_time_success&&get_hospital_time.length
+    - day = get_hospital_time[0];
+    - startTime = day.startTime.split(":")
+    -  endTime = day.endTime.split(":")
+else
+    li #{get_hospital_time.msg}
+if timeType!=1
+    li
+        label 时间间隔
+        input.intervals(type='text' placeholder='30' disabled=true,value=day.intervals)
+        |分钟
+li
+    label 时间
+    input.startTimeH(type='text' value=startTime[0] disabled=true)
+    |：
+    input.startTimeM(type='text' value=startTime[1] disabled=true)
+    |——
+    input.endTimeH(type='text' value=endTime[0] disabled=true)
+    | ：
+    input.endTimeM(type='text' value=endTime[1] disabled=true)
+li
+    label 星期
+    if get_hospital_time_success
+        aside
+            each item,index in CONST.week
+                -var checked = false;
+                -var forIndex = timeType+'_'+index
+                each arr in get_hospital_time
+                    if arr.week === index+1
+                        - checked = true
+                input.week(type='checkbox' id=forIndex value=index+1 checked=checked,disabled=true)
+                label(for=forIndex) #{item}
+    else
+li
+    button.btn.updateBtn 编辑

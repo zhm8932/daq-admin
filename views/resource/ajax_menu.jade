@@ -1,0 +1,69 @@
+section#content
+    .toolbar
+        span.btn.addBtn 添加
+        span.btn.delBtn 删除
+
+    div.resource(data-role="menuGrid")
+        mixin li(arr,index)
+            li(data-level=arr.level,data-id=arr.id,data-parentId=arr.parentId,data-parentName=arr.parentName,data-name=arr.name)
+                span.w1.check: input(type='checkbox')
+                span.w2.pos #{arr.position}
+                if arr.children&&arr.children.length
+                    span.w3.name.icon #{arr.name}
+                else
+                    span.w3.name #{arr.name}
+
+                span.w5.url #{arr.url}
+                span.w4.description
+                    if arr.description
+                        | #{arr.description}
+                    else
+                        | 无
+                span #{arr.version}
+        .thead
+            span.w1.allCheck: input(type='checkbox')
+            span.w2 排序
+            span.w3 菜单名
+            span.w5 链接
+            span.w4 描述
+            span 状态
+        ul
+          each item in data
+              //-第1级
+              +li(item)
+              //-li(data-level=item.level,data-id=item.id)
+                span.w1: input(type='checkbox')
+                span.w2 #{item.position}
+                span.w3.name #{item.name}
+                span.w4 #{item.url}
+                span.w4 #{item.description}
+                span #{item.version}
+              if item.children.length
+                  //-第2级
+                 ol
+                    each arr in item.children
+                        +li(arr)
+                        if arr.children.length
+                            //-第3级
+                           ol
+                               each arr2 in arr.children
+                                   +li(arr2)
+                                   if arr2.children.length
+                                       //-第4级
+                                       ol
+                                           each arr3 in arr2.children
+                                               +li(arr3)
+                                               if arr3.children.length
+                                                   //-第5级
+                                                   ol
+                                                       each arr4 in arr3.children
+                                                           +li(arr4)
+                                                           if arr4.children.length
+                                                               //-第6级
+                                                               ol
+                                                                   each arr5 in arr4.children
+                                                                       +li(arr5)
+
+
+
+

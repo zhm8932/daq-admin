@@ -1,0 +1,67 @@
+@import "../settings.scss";
+.formBox ul li{
+  position: relative;
+}
+.area{
+  position: relative;margin-left: 104px;display: none;
+  ul{
+    li{text-align: center;width: 70px;
+      em{
+        padding:5px;border: 1px solid $bdrc1;display:block;text-align: center;float: left;width: 100%;box-sizing: border-box; cursor: pointer;position: relative;
+        &.on{background-color: $navBgOnColor;color:$color-white;
+          i{
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-right: 8px solid $color-white;
+            border-bottom: 6px solid transparent;
+            display: inline-block;
+            position: absolute;z-index: 2;
+            right: -2px;top:7px;
+          }
+        }
+
+      }
+    }
+  }
+  .provinces{
+    position: absolute;border: 1px solid $bdrc1;z-index: 2;background-color: $color-white;padding: 10px;width: 240px;
+    left: 0px;top: -1px;
+    li{margin: 0 10px 1px 0}
+  }
+  .citys{
+    display: none;float: left;position: relative;
+    ul{position: absolute;left: 0px;}
+
+  }
+  .districts{
+    display: none;float: left;position: relative;
+    ul{position: absolute;left: 0px;background-color: $color-white;}
+  }
+}
+
+.tabBox{
+  width: 620px;border: 1px solid $bgc_CCC;margin: 20px 0 0 0;box-sizing: border-box;padding: 20px 10px;
+  .hd{
+    line-height: 30px;padding:0 0 10px 0;width: 380px;
+    span{width: 30%;float: left;text-align: center;border: 1px solid $bdrc1; cursor: pointer;border-radius: 3px;
+      &.on,&:hover{border-color:$navBgColor;color: $navBgColor;@include transition(all 0.3s)}
+    }
+  }
+  .con{
+    ul{
+      li{padding: 10px 0;
+        > label{display: inline-block;text-align: right;padding-right: 10px;}
+      }
+
+      label{width: 65px;padding-right:1px;display:inline-block;}
+      input[type='text']{width: 30px;text-align: center;margin-right: 5px;box-sizing: content-box;padding: 0px;}
+      aside{display: inline-block;
+        input{position: relative;top: 7px;}
+        label{width: 44px;}
+      }
+      .btn{float: none;}
+    }
+    .saveBtn{background-color: $bgc_red_d9;}
+  }
+}

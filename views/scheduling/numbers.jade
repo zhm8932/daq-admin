@@ -1,0 +1,99 @@
+extends ../layout
+block content
+    link(href='/css/scheduling/scheduling.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：排班系统> 号源管理
+            section#content.scheduling
+                form.search(method='get',action='/scheduling/numbers')
+                    label 所属地区：
+                    if get_hospital_all_success
+                        select(name='hospitalId',value=queryObj.hospitalId)
+                            option(value='') 全部
+                            each item in get_hospital_all
+                                - var bSelect = null
+                                if item.id == queryObj.hospitalId
+                                    - bSelect = true
+                                option(value='#{item.id}',selected=bSelect) #{item.hospitalName}
+                    else
+                        span.red 门诊获取失败
+                    label 医生：
+                    input(type='text',name='doctor',value=queryObj.doctor)
+                    button(type='submit') 搜索
+
+                    a.btn.saveBtn.rt(href='javascript:;')  保存设置
+                if !success
+                    aside #{JSON.stringify(data)}
+                else
+                   table.table
+                    thead
+                        tr
+                            th  全选
+                            th  医生
+                            th  所属门诊
+                            th  放号
+                            th(colspan=3)  周一
+                            th(colspan=3)  周二
+                            th(colspan=3)  周三
+                            th(colspan=3)  周四
+                            th(colspan=3)  周五
+                            th(colspan=3)  周六
+                            th(colspan=3)  周日
+                        tr
+                            th
+                            th
+                            th
+                            th
+                            -for(var i=0;i<7;i++){
+                                th: em 上午
+                                th: em 下午
+                                th: em 晚上
+                            -}
+
+                            //-th
+                                em 上午
+                                em 下午
+                                em 晚上
+
+
+
+
+                    tbody
+                      if !data.length
+                            tr
+                                td(colspan='25') 暂无数据
+                      else
+                            each item in data
+                                tr(data-doctorId=item.doctorId)
+                                    td: input.all(type='checkbox')
+                                    td: a(href='/treats/doctor/detail/#{item.doctorId}',target='_blank') #{item.doctorName}
+                                    td: a(href='/treats/clinic/detail/#{item.hospitalId}',target='_blank') #{item.hospitalName}
+                                    td: a(href='/scheduling/numbers/set_numbers/#{item.doctorId}',target='_blank') 设置
+                                    if item.regDayList
+                                        each arrs,dayOfWeek in item.regDayList
+                                            each arr,timeSlot in arrs.regTimeList
+                                             if !arr.set
+                                                 td.noneSoruce
+                                             else
+                                                 if arr.open
+                                                    td(data-dayOfWeek=dayOfWeek+1,data-timeSlot=timeSlot+1)
+                                                        input(type='checkbox',checked=true,disabled=true)
+                                                        //-em 是的#{arr.open}
+
+                                                 else
+                                                     td(data-dayOfWeek=dayOfWeek+1,data-timeSlot=timeSlot+1)
+                                                        input(type='checkbox')
+                                                        //-em  不是#{arr.open}
+                                    else
+                                        -for(var i=0;i<21;i++){
+                                            td.noneSoruce
+                                        -}
+
+
+                include ../includes/pagination
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/scheduling/numbers.js')

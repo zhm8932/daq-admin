@@ -1,0 +1,155 @@
+extends ../layout
+block content
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：活动中心>优惠券管理
+            section#content
+                .tab
+                    //-a.btn(href='/activity/coupon/add') 新增优惠券
+                    if eleAuthority&&eleAuthority.CouponSearch
+                        form.search(method='get',action='/activity/coupons')
+                            label 优惠券名称：
+                            input(type='text',name='name',value=queryObj.name)
+                            label 优惠券码：
+                            input(type='text',name='inviteCode',value=queryObj.inviteCode)
+                            //-span.delete 清除
+                            label 状态：
+                            select(name='couponState')
+                                - var statusArr= [{'1':'领取中'},{'2':'手动结束'},{'3':'过期'}]
+                                option(value='') 全部
+                                -for(var i=0,len= statusArr.length;i<len;i++){
+                                    - var bSelect = null
+                                    each index,str in statusArr[i]
+                                        if str == queryObj.couponState
+                                            - bSelect = true
+                                        option(value=str,'selected'=bSelect) #{index}
+                                -}
+                            label 门诊：
+                            if !get_hospital_all_success
+                                aside.red 门诊获取失败
+                            else
+                                select(name='fitArea')
+                                    option(value='') 全部
+                                    each item in get_hospital_all
+                                        - var bSelect = null
+                                        if item.hospitalCode == queryObj.fitArea
+                                            - bSelect = true
+                                        option(value='#{item.hospitalCode}',selected=bSelect) #{item.hospitalName}
+                            //-label 地区：
+                            //-if getCity
+                                select(name='fitArea')
+                                    option(value='') 全部
+                                    each item in getCity
+                                        - var bSelect = null
+                                        if item.name==queryObj.fitArea
+                                            - bSelect = true
+                                        option(value='#{item.name}',selected=bSelect) #{item.name}
+                            //-else
+                                span.red 地区获取失败
+
+                            button(type='submit') 搜索
+                if !success
+                    aside #{data}
+                else
+                    table.table
+                        thead
+                            tr
+                                th  优惠券名称
+                                th  类型
+                                th  优惠内容
+                                th  条件
+                                th  有效时间
+                                th.w2  适用门诊
+                                th  限领/人
+
+                                th  发行量
+                                th  领取量
+                                th  使用数据
+                                th  状态
+                                th  操作
+                        tbody
+                        if !data.length
+                            tr
+                                td(colspan='12') 暂无数据
+                        each item in data
+                            tr(data-id="#{item.id}")
+                                td
+                                    if item.name.length>20
+                                        em(title=item.name) #{item.name.substring(0,16)}……
+                                    else
+                                        |#{item.name}
+                                    if item.inviteCode
+                                        p 领取码：#{item.inviteCode}
+                                td
+                                    case item.ftype
+                                        when 'discount'
+                                            | 折扣券
+                                        when 'cash'
+                                            em.red 现金券
+                                td
+                                    case item.ftype
+                                        when 'discount'
+                                            | #{item.discount.toFixed(1)}折
+                                        when 'cash'
+                                            | #{(item.faceValue/100).toFixed(2)}元
+                                td
+                                    case item.ftype
+                                        when 'discount'
+                                            | 最高抵扣#{item.mostDeduction / 100}元
+                                        when 'cash'
+                                            | 满#{item.enoughMoney / 100}元
+                                //-td
+                                    if item.mostDeduction
+                                        | 最高抵扣#{item.mostDeduction / 100}元
+                                    else
+                                        | 满#{item.enoughMoney / 100}元
+
+                                td #{moment(item.beginTime).format('YYYY-MM-DD HH:mm')}至<br>
+                                    |  #{moment(item.endTime).format('YYYY-MM-DD HH:mm')}
+                                td
+                                    if item.fitArea
+                                        - var fitArea = JSON.parse(item.fitArea)
+                                        -for(var i=0,len=fitArea.length;i<len;i++){
+                                            if(i<len-1)
+                                                | #{fitArea[i].hospitalName}，
+                                            else
+                                                | #{fitArea[i].hospitalName}
+                                        -}
+
+                                td #{item.limitGet}
+
+                                td #{item.amount}
+                                td #{item.receiveAmount}
+                                td
+                                    //-p 使用中：
+                                    p 已使用：#{item.hadUsed}
+                                    p 未使用：#{item.unUsed}
+                                td
+                                    case item.couponState
+                                        when 1
+                                            span.statue 领取中
+                                        when 2
+                                            span.statue.redBg 手动结束
+                                        when 3
+                                            span.statue.redBg 过期
+                                        default
+                                            span 未知
+                                td
+
+                                    case item.couponState
+                                        when 1
+                                            //-a(href='/activity/coupons/update/#{item.id}',target='_blank') 修改
+                                            if eleAuthority&&eleAuthority.CouponStop
+                                                a.endBtn(href='javascript:;',data-couponState=item.couponState) 结束
+                                    if eleAuthority&&eleAuthority.CouponDetail
+                                        a(href='/activity/coupons/detail/1?id=#{item.id}&ftype=#{item.ftype}',target='_blank') 详情
+
+
+
+                    //-分页
+                    include ../includes/pagination
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/activity/coupon.js')

@@ -1,0 +1,45 @@
+extends ../layout
+block content
+    link(href="/css/daterangepicker.css",rel="stylesheet")
+    link(href='/css/screenings/book_order.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：筛查业务>订单管理>新增预约
+            section#content.book_order
+                .formBox.bookForm
+                        label 套餐密码：
+                        input.password(type='search',name='password',value='',placeholder='请输入套餐密码')
+                        button.btn.submitBtn 添加
+                h2 已添加套餐列表
+                table.table
+                    thead
+                        tr
+                            th  选择
+                            th  订单编号
+                            th  支付时间
+                            th  取样方式
+                            th  套餐信息
+                            th  下单账号
+                    tbody
+                        tr
+                            td(colspan='6') 暂无可预约套餐
+                        //-tr
+                            td: input(type='checkbox')
+                            td 88888
+                            td 2016-05-29 20:35
+                            td
+                                p 上门取样
+                                p 取样地址：广东省深圳市南山区
+                            td
+                                p 白金套餐
+                                p 取样类型：血样
+                                p 检测人群：血样
+                            td  15554544544
+                button.btn.yuyueBtn 确定预约
+
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/screenings/book_order.js')

@@ -1,0 +1,17 @@
+if(!data.data.length)
+    aside 暂无数据
+else
+    ul
+      each item in data.data
+          li(data-id="#{item.id}")
+            span.w1.check: input(type='checkbox')
+            span.w4.name #{item.name}
+            span.w4.description #{item.description}
+            span.w4.identifier #{item.identifier}
+            //-span.isDefault
+                if item.isDefault
+                    em.text-danger 默认角色
+                else
+                    em 非默认角色
+//-用于初始化页码控件时获取总页数
+input.pageCount(type="hidden",value="#{data.pageCount}")

@@ -1,0 +1,51 @@
+extends ../layout
+block content
+    link(href='/css/chat.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：互动管理>指定医生咨询
+            //-span #{data}
+            section#content
+                //if(eleAuthority && eleAuthority.ChatHistorySearch)
+                //    .search
+                //        label 手机号码：
+                //        input(type='search',name='tel')
+                //        label 标记类型：
+                //        select
+                //            option 全部
+                //            option(value='') 全部
+                //            option(value='1') 已读
+                //            option(value='2') 未读
+                //        button(type='submit') 搜索
+                table#user-list.table(data-masterAccId='#{accountId}',data-masterAccName='#{account}',data-p="#{imToken}")
+                    thead
+                        tr
+                            th  发送者
+                            th  接收者
+                            th  消息时间
+                            th(width="40%")  最新消息
+                            th  操作
+                    tbody
+                        if data.length > 0
+                            each item,i in data
+                                tr(class="#{item.fromUser} #{item.toUser}",data-fromUserId="#{item.fromUser}",data-toUserId="#{item.toUser}")
+                                    td.fromUser #{item.fromUser}
+                                    td.toUser #{item.toUser}
+                                    td #{moment(item.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
+                                    -var body = JSON.parse(item.body);
+                                    td #{body.msg?body.msg:'【非文字消息】'}
+                                    td
+                                        if(eleAuthority && eleAuthority.ChatWithOthers)
+                                            a.chatBtn(href='javascript:;') 会话
+                        else
+                            tr.no-record
+                                td(colspan='5') 暂无记录
+
+                //-分页
+                include ../includes/pagination
+                include ../chat
+    include ../includes/footer
+    script(src="/js/libs/jquery.min.js")
+    script.
+        seajs.use('/js/interacts/consult.js')

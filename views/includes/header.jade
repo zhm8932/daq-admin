@@ -1,0 +1,15 @@
+header.header
+    .item
+        button(type='button')
+            i.icon-bar
+            i.icon-bar
+            i.icon-bar
+        .logo 都安全后台管理系统
+    if account
+        .login
+            span
+            span.account
+                label 登录账号：
+                |#{account}
+            em |
+            a.logout(href='/admin/login')  退出登录

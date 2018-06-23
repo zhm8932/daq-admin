@@ -1,0 +1,52 @@
+$navBgColor:#395f83;
+$navBgOnColor:#5baddc;
+$bdrc:#41688d;
+$bdrc1:#c9c9c9;
+$bdrc2:#747474;
+$bdrc3:#999;
+$tipColor:#ee3e01;
+$header-size:60px;
+
+$f-color:#41688d;
+
+$color-white:#FFF;
+$fe9:#fe9900;
+$bdr:1px solid #989898;
+$bdr-leftMenu-color:#989898;
+$bdr-color:#CCC;
+$bdr-CCC:#CCC;
+$menu-h3-bgcolor:#FFF;
+$color-09f:#0099ff;
+$w100:100%;
+$headImgBoxW:600px;
+$headImgBoxH:400px;
+
+$textc_004:#004485;
+$tc_gray:#E2E2E2;
+$tc_gray2:#B3B3B3;
+
+$bgc_e7:#E7E7E7;
+$bgc_CCC:#CCC;
+$bgc_ef:#F0F0F0;
+$bgc_blue_e4:#e4ebf2;
+$bgc_red_d9:#d9534f;
+$bgc_red_ff:#FF0000;
+
+@mixin bdr($bdrc){
+  border: 1px solid $bdrc;
+}
+@mixin transition($background){
+  -webkit-transition: $background;
+  -moz-transition: $background;
+  -ms-transition: $background;
+  -o-transition: $background;
+  transition: $background;
+}
+
+@mixin btn($linkC,$hoverC){
+  @include transition(all 0.3s);
+  background-color:$linkC; border: none; color: $color-white; line-height: 30px; cursor: pointer; padding: 0 20px; margin: 10px 0; border-radius: 5px; display: inline-block; white-space: nowrap;
+  &:hover{
+    background-color: $hoverC;color: $color-white;
+  }
+}

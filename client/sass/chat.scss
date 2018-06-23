@@ -1,0 +1,180 @@
+@import "settings.scss";
+.none{display:none;}
+$chatBoxWidth:800px;
+$chatBoxHeight:500px;
+.chat-bg{position:fixed;left:0;right:0;width:100%;height:100%;background:rgba(0,0,0,.4);}
+.chatBox{
+  width: $chatBoxWidth;height: $chatBoxHeight;background-color: #FFF; display:none;z-index:9999;border-radius:5px;border:8px solid #E6F3FF;box-shadow: 0px 0px 4px 0px #395F83; position: fixed; left: 50%;top:50%; margin-left: -$chatBoxWidth/2;margin-top: -$chatBoxHeight/2;
+  .chat01_title{
+    line-height: 40px; height: 40px; border-bottom: 1px solid #F8F8F8;
+    .close{ float: right;width: 50px; line-height: 40px; cursor: pointer;
+      &:hover{ color: $navBgColor}
+    }
+
+  }
+  .chat01_content{
+    width: 100%;height:300px; overflow-x:auto; background-color:#F8F8F8;
+    .master{
+      text-align:right;
+      .user-name{color:#0083FF;}
+    }
+    .customer{
+      text-align:left;
+      padding-right:30px;
+      .user-name{color:#00B333;}
+    }
+    div{ padding: 5px;}
+    .chat-content-p3{ background-color: #ffffff;border-radius: 5px; display: inline-block; margin: 5px 0 0 0; padding: 5px 10px;}
+
+  }
+  .chat02_title{ line-height: 40px; border-bottom: 1px solid $bdrc3;
+    padding: 0 10px;
+    ul{ margin: 0 10px;}
+    .masterUser{ float: right;}
+    //.chat02_title_btn{float:left;cursor:pointer;display: block;width:15px;height:15px;margin:5px 6px;background:url('/images/chat_icon.png') no-repeat 0 0 ;}
+    //.ctb01{background-position: 0 -90px;margin-left:18px;}
+    //.ctb02{background-position: 0 -457px}
+    //.ctb03{background-position: 0 -152px;}
+
+    .chat02_title_btn {
+      background: url('../images/chat_icon.png') no-repeat 0 0;
+      cursor: pointer;
+      float: left;
+      display: block;
+      width: 15px;
+      height: 15px;
+      margin: 5px 6px;
+    }
+
+    .ctb01 {
+      background-position: 0 -90px;
+      margin-left: 18px;
+      _margin-left: 8px;
+    }
+
+    .ctb03 {
+      background-position: 0 -152px;
+    }
+
+    .ctb02 {
+      background-position: 0 -457px;
+    }
+    .ctb04 {
+      background-position: 0 -279px;
+    }
+
+    .close_btn {
+      background: url('../images/chat_icon.png') no-repeat 0 0;
+      position: absolute;
+      top: 10px;
+      right: 8px;
+      display: block;
+      width: 15px;
+      height: 15px;
+    }
+
+    .wl_faces_box {
+      position: absolute;
+      bottom: 160px;
+      left: -50px;
+      display: none;
+    }
+
+    .wl_faces_content {
+      background: #fff;
+      border: 1px #ccc solid;
+      margin: 3px 4px;
+    }
+
+    .wl_faces_content .title {
+      height: 30px;
+      position: relative;
+    }
+
+    .wl_faces_content .title ul {
+
+    }
+
+    .wl_faces_content .title ul li {
+      position: absolute;
+      display: block;
+    }
+
+
+    .wl_faces_content .title ul li.wl_faces_close {
+      right: 8px;
+      top: 15px;
+    }
+
+    .wl_faces_content .title ul li.wl_faces_close span {
+      background: url('../images/chat_icon.png') repeat-x 0 0;
+      cursor: pointer;
+      display: block;
+      width: 15px;
+      height: 15px;
+    }
+
+    .wl_faces_main ul {
+      margin: 12px 28px;
+      overflow: hidden;
+      border-top: 1px #CCC solid;
+      border-left: 1px #CCC solid;
+      width: 360px;
+    }
+
+    .wl_faces_main ul li {
+      float: left;
+      border-right: 1px #CCC solid;
+      border-bottom: 1px #CCC solid;
+      height: 22px;
+      width: 26px;
+      margin: -1px 0 0 -1px;
+      padding: 4px 2px;
+      text-align: center;
+    }
+
+    .wl_faces_main ul li img {
+      width: 22px;
+      height: 22px;
+    }
+
+    .chat02_bar ul {
+      height: 100%;
+    }
+
+    .chat02_bar li {
+      position: absolute;
+    }
+
+    .chat03_title_t {
+      background: url('../images/chat_icon.png') no-repeat 0px -370px;
+      position: absolute;
+      padding-left: 25px;
+      top: 8px;
+      left: 20px;
+      display: block;
+      width: auto;
+      height: 15px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .chat01_content {
+      height: 312px;
+      width: 555px;
+      overflow-x: none;
+      overflow-y: auto;
+    }
+
+    .chat02_content {
+      height: auto;
+    }
+  }
+  .chat02_content{
+    textarea{ width: 98%; height: 66px; line-height: 22px; margin: 5px auto 10px; padding: 0px; border: none; display: block;outline: none}
+  }
+  .chat02_bar{
+    button{ float: right; margin: 0 10px 0 0}
+  }
+  .thumb{max-width:200px;max-height:200px;}
+}

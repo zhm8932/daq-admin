@@ -1,0 +1,77 @@
+extends ../layout
+block content
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：首页>治疗业务>门诊管理
+            section#content
+                //span #{success}
+                if !success
+                    aside #{JSON.stringify(data)}
+                else
+                    if eleAuthority&&eleAuthority.ClinicSearch
+                        form.search.tab(method='get',action='/treats/clinic')
+                            label 门诊名称：
+                            input(type='text',name='hospitalName',value=hospitalName)
+                            label 门诊电话：
+                            input(type='text',name='telephone',value=telephone)
+                            button(type='submit') 搜索
+                            //a.btn(href='/treats/clinic/add') 新增门诊
+                    table.table
+                        thead
+                            tr
+                                th  门诊名称
+                                th  门诊编号
+                                th  成立时间
+                                th  门诊地址
+                                th  门诊电话
+                                th  门诊介绍
+                                th  操作
+                        tbody
+                            if !data.length
+                                tr
+                                    td(colspan='6') 暂无数据
+                            else
+                                each item in data
+                                    tr(data-id="#{item.id}")
+                                        td
+                                            a(href="/treats/clinic/detail/#{item.id}",target='_blank') #{item.hospitalName}
+                                            p
+                                                case item.operatingState
+                                                    when 0
+                                                        em.statue.redBg 未开业
+                                                    when 1
+                                                        em.statue 运营中
+                                                    when 2
+                                                        em.statue.redBg 暂停业
+
+                                        td #{item.hospitalCode}
+                                        td #{moment(item.establishedTime).format('YYYY-MM-DD HH:mm:ss')}
+                                        td #{item.address}
+                                        td #{item.telephone}
+                                        td
+                                            if item.description.length>20
+                                                em(title=item.description) #{item.description.substring(0,20)}……
+                                            else
+                                                |#{item.description}
+                                        td
+                                            if eleAuthority&&eleAuthority.ClinicEdit
+                                                a(href='/treats/clinic/update/#{item.id}',target='_blank') 编辑
+                                            a.isOperating(href='javascript:;',data-statue='#{item.operatingState}')
+                                                case item.operatingState
+                                                    when 0
+                                                        if eleAuthority&&eleAuthority.ClinicOpen
+                                                            span 开业
+                                                    when 1
+                                                        if eleAuthority&&eleAuthority.ClinicClose
+                                                            span.red 停业
+                                                    when 2
+                                                        if eleAuthority&&eleAuthority.ClinicOpen
+                                                            span 开业
+
+                //-分页
+                include ../includes/pagination
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/clinic.js')

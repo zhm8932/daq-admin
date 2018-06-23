@@ -1,0 +1,383 @@
+extends ../layout
+block content
+    link(href='/css/swipebox.css',rel='styleSheet')
+    link(href='/css/chat.css',rel='styleSheet')
+    link(href='/css/user_detail.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：用户管理> 账号管理 > 账号详情
+            section#content(data-accountId="#{data.accountCommon.id}")
+                .detail
+                    dl.detail-main.clearfix
+                        dt
+                            img(src='#{data.accountExtends.avatar}')
+                            if eleAuthority&&eleAuthority.AccountAvatar
+                                p: a.historyAvatar(href='javascript:;') 查看历史头像
+                            case data.accountExtends.accountStatus
+                                when 'normal'
+                                    if eleAuthority&&eleAuthority.AccountDisable
+                                        span.btn.statueBtn(data-statues="#{data.accountExtends.accountStatus}") 禁用
+                                when 'disable'
+                                    if eleAuthority&&eleAuthority.AccountEnable
+                                        span.btn.statueBtn.redBg(data-statues="#{data.accountExtends.status}") 解禁
+                        dd
+                            div
+                                p 账号编号：
+                                    em.accountId(data-imToken=imToken) #{data.accountCommon.id}
+                                p 注册号码：#{data.accountCommon.account}
+                                p 注册时间：#{moment(data.accountCommon.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                            div
+                                p 使用设备：#{data.accountCommon.origin}
+                                p 账号状态：
+                                    span.status
+                                        case data.accountExtends.accountStatus
+                                            when 'normal'
+                                                | 正常
+                                            when 'disable'
+                                                | 违禁
+                    .tab
+                        .hd.clearfix
+                            if eleAuthority&&eleAuthority.AccountOrderList
+                                span: a(href='?type=order',data-type='order') 购买订单
+                            if eleAuthority&&eleAuthority.AccountBookList
+                                span: a(href='?type=book',data-type='book') 预约订单
+                            if eleAuthority&&eleAuthority.AccountRegisterList
+                                span: a(href='?type=register',data-type='register') 门诊订单
+                            if eleAuthority&&eleAuthority.AccountContactList
+                                //span: a(href='javascript:;') 回访记录
+                                span: a(href='?type=contact') 常用联系人
+                            if eleAuthority&&eleAuthority.AccountAddressList
+                                span: a(href='?type=address') 常用地址
+                            if eleAuthority&&eleAuthority.AccountChatsList
+                                span.chatListBtn: a(href='?type=chats') 咨询记录
+                        .con
+                            //-购买订单
+                            if get_my_order_success&&eleAuthority&&eleAuthority.AccountOrderList
+                                mixin td2(arr)
+                                    td: span.break #{arr.goodsId}
+                                    if orderState == 2
+                                        td!= CONST.reservationStateArr[arr.reservationState]
+                                mixin goods_detail(arr)
+                                    .tl
+                                        p: a(href='/screening/meal/detail/#{arr.goodsId}',target='_blank')
+                                            if arr.goodsName.length > 20
+                                                em(title=arr.goodsName) #{arr.goodsName.substring(0, 16)}……
+                                            else
+                                                | #{arr.goodsName}
+                                        p 套餐价格：#{parseFloat(arr.dealPrice) / 100}元
+                                        p 样品类型：
+                                            if arr.transmitItems
+                                                - var transmitItemsArr = JSON.parse(arr.transmitItems)
+                                                - for(var i=0;len=transmitItemsArr.length,i<len;i++){
+                                                if(i < len - 1)
+                                                    if transmitItemsArr[i].name != ''
+                                                        | #{transmitItemsArr[i].name}，
+                                                else
+                                                    if transmitItemsArr[i].name != ''
+                                                        | #{transmitItemsArr[i].name}
+                                                -}
+                                        p 检查目的：#{arr.fitPeople}
+                                mixin goods_operate(item,arr)
+                                    a(href='/screening/order/detail/#{item.id}',target='_blank') 订单详情
+                                    if item.isOnline!=1
+                                        p.red 线下订单
+                                mixin transmitType(arr)
+                                    if arr.transmitType
+                                        each arrSub,i in JSON.parse(arr.transmitType)
+                                            p= CONST.transmitTypeObj[i]
+                                mixin totalCost(item)
+                                    p.red #{parseFloat(item.totalCost) / 100}元
+                                mixin th(item)
+                                    tr.tl(class='#{item.id}')
+                                        - var colspan = ''
+
+                                        if orderState == 2
+                                            - colspan=8
+                                        else
+                                            - colspan=7
+                                        th(colspan='#{colspan}')
+                                            div.th
+                                                em 订单编号：#{item.id}
+                                                time #{moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+
+                                                em.rt.red #{CONST.orderStatusArr[item.orderState]}
+                                mixin moblie(item)
+                                    a(href='/users/account/detail/#{item.accountId}' target='_blank') #{item.moblie}
+                                table.table.tableSub
+                                    thead
+                                        tr
+                                            th  子订单编号
+                                            if orderState == 2
+                                                th  状态
+                                            th  取样方式
+                                            th  套餐信息
+                                            th
+                                                case orderState
+                                                    when '2'
+                                                        | 支付时间
+                                                    when '1'
+                                                        | 下单时间
+                                                    when '3'
+                                                        | 支付时间
+                                                    when '4'
+                                                        | 支付时间
+                                                    when '5'
+                                                        | 取消时间
+                                            th  下单账号
+                                            th  支付金额
+                                            th  操作
+                                    tbody
+                                        if !get_my_order.length
+                                            - var colspan = ''
+
+                                            if orderState == 2
+                                                - colspan=8
+                                            else
+                                                - colspan=7
+                                            tr
+                                                td(colspan='#{colspan}') 暂无数据
+                                        else
+                                            each item in get_my_order
+                                                if item.goodsItemDTOs && item.goodsItemDTOs.length == 1
+                                                    +th(item)
+                                                    each arr in item.goodsItemDTOs
+                                                        //-div= arr.goodsName
+                                                        tr(data-id='#{item.id}',class='#{item.id}')
+                                                            +td2(arr)
+                                                            td
+                                                                //取样方式
+                                                                +transmitType(arr)
+                                                            td
+                                                                //-套餐详情
+                                                                +goods_detail(arr)
+                                                            td #{moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+                                                            td
+                                                                +moblie(item)
+                                                            td
+                                                                +totalCost(item)
+
+                                                            td
+                                                                //-操作
+                                                                +goods_operate(item,arr)
+                                                else
+                                                    - var goodsLen = item.goodsItemDTOs.length;
+                                                    +th(item)
+                                                    each arr,i in item.goodsItemDTOs
+                                                        //div 多个子产品-----------:#{arr.goodsName}
+
+                                                        if(i == 0)
+                                                            tr(data-id='#{item.id}',class='#{item.id}',data-goodsLen=goodsLen)
+                                                                +td2(arr)
+                                                                td
+                                                                    //取样方式
+                                                                    +transmitType(arr)
+
+                                                                td
+                                                                    //-套餐详情
+                                                                    +goods_detail(arr)
+
+                                                                td(rowspan=goodsLen) #{moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+                                                                td(rowspan=goodsLen)
+                                                                    +moblie(item)
+                                                                td(rowspan=goodsLen)
+                                                                    +totalCost(item)
+                                                                td(rowspan=goodsLen)
+                                                                    //-操作
+                                                                    +goods_operate(item,arr)
+                                                        else
+                                                            tr(data-id='#{item.id}',class='#{item.id}',data-goodsLen=goodsLen)
+                                                                +td2(arr)
+                                                                td
+                                                                    //取样方式
+                                                                    +transmitType(arr)
+                                                                td
+                                                                    //-套餐详情
+                                                                    +goods_detail(arr)
+                            //-门诊订单
+                            if !get_my_register_success
+                                aside #{JSON.stringify(get_my_register)}
+                            else
+                                if eleAuthority&&eleAuthority.AccountBookList
+                                    table.table
+                                        thead
+                                            tr
+                                                th  订单编号
+                                                th  手机号码
+                                                th  预约时间
+                                                th  预约门诊
+                                                th  预约医生
+                                                th  状态
+                                                th  下的时间
+                                                th  备注
+                                                th  操作
+                                        tbody
+                                            if !get_my_register.length
+                                                tr
+                                                    td(colspan='9') 暂无数据
+                                            else
+                                                each item in get_my_register
+                                                    tr(class=item.id)
+                                                        td #{item.id}
+                                                        td #{item.telNum}
+                                                            p #{item.patient}
+                                                        td #{moment(item.end).format('YYYY-MM-DD HH:mm')}
+                                                        td
+                                                            p: a(href='/treats/clinic/detail/#{item.doctorDTO.hospitalReDepartments[0].hospitalId}' target='_blank') #{item.doctorDTO.hospitalReDepartments[0].hospitalName}
+                                                            p #{item.doctorDTO.hospitalReDepartments[0].departmentName}
+                                                        td: a(href='/treats/doctor/detail/#{item.doctorDTO.id}',target='_blank') #{item.doctorDTO.doctorName}
+                                                        td #{CONST.reservationStatusArr[item.reservationStatus]}
+                                                        td #{moment(item.start).format('YYYY-MM-DD HH:mm')}
+                                                        td
+                                                            if item.remark
+                                                                | #{item.remark}
+                                                        td(data-reservationId=item.id,data-status="#{item.reservationStatus}",data-serviceType=item.serviceType)
+                                                            p: a(href='/treats/register/detail/#{item.id}',target='_blank') 预约详情
+                                                            //-case item.reservationStatus
+                                                                when 1
+                                                                    p: a.toRegister(href='javascript:;') 门诊登记
+                                                                when 3
+                                                                    p: a.noteBtn(href='javascript:;') 备注
+                            if !get_my_book_success
+                                aside #{JSON.stringify(get_my_book)}
+                            else
+                                if eleAuthority&&eleAuthority.AccountRegisterList
+                                    table.table
+                                        thead
+                                            tr
+                                                th  预约编号
+                                                //-th  受检人
+                                                th  预约时间
+                                                th  服务门诊
+                                                th  预约信息
+                                                th  套餐
+                                                th  操作
+                                        tbody
+                                            if !get_my_book.length
+                                                tr
+                                                    td(colspan='7') 暂无数据
+                                            else
+                                                each item in get_my_book
+                                                    tr(class=item.id)
+                                                        td #{item.id}
+                                                        //-td #{item.checkedName}
+                                                        td #{moment(item.createdAt).format('YYYY-MM-DD HH:mm')}
+                                                        td
+                                                            if item.goodsInfo
+                                                                -hospital = JSON.parse(item.goodsInfo.hospital)
+                                                                | #{hospital.hospitalName}
+                                                            //-#{item.province}#{item.city}
+                                                        td: aside.tl
+                                                            - var timeWay = ''
+                                                            p 取样方式：
+                                                                case item.serviceType
+                                                                    when 0
+                                                                        | 未选择服务方式
+
+                                                                    when 1
+                                                                        | 门诊取样
+                                                                        -timeWay ='就诊时间'
+                                                                    when 2
+                                                                        em.red 上门取样
+                                                                        -timeWay ='取样时间'
+                                                                    when 3
+                                                                        em.textc_fe9 快递取样
+
+
+                                                            //-| 取样时间：#{moment(item.samplingTime).format('YYYY-MM-DD HH:mm:ss')}
+                                                            if item.serviceType != 3
+                                                                p #{timeWay}：#{moment(item.time).format('YYYY-MM-DD HH:mm:ss')}
+                                                            if item.serviceType == 1
+                                                                p 门诊地址：#{item.address}
+                                                            else if item.serviceType == 3
+                                                                p 快递地址：#{item.address}
+                                                            else
+                                                                //-p #{item.province}#{item.city}#{item.region}#{item.address}
+                                                                p 取样地址：#{item.address}
+                                                            if item.checkedName
+                                                                em 受检人：#{item.checkedName}
+                                                        td
+                                                            if item.goodsInfo
+                                                                p
+                                                                    a(href='/screening/meal/detail/#{item.goodsInfo.goodsId}',target='_blank',title=item.name)
+                                                                        if item.goodsInfo.goodsName.length > 20
+                                                                            | #{item.goodsInfo.goodsName.substring(0, 18)}……
+                                                                        else
+                                                                            | #{item.goodsInfo.goodsName}
+                                                                p 密码： #{item.password}
+                                                        td(data-id="#{item.id}",data-status="#{item.reservationStatus}",data-serviceType=item.serviceType)
+                                                            p: a(href='/screening/booking/detail/#{item.id}',target='_blank') 预约详情
+                            //-常用联系人
+                            if !get_my_contact_success
+                                aside #{JSON.stringify(get_my_contact)}
+                            else
+                                if eleAuthority&&eleAuthority.AccountContactList
+                                    table.table
+                                        thead
+                                            tr
+                                                th  姓名
+                                                th  性别
+                                                th  年龄
+                                                th  联系电话
+                                        tbody
+                                            if !get_my_contact.length
+                                                tr
+                                                    td(colspan='5') 暂无数据
+                                            else
+                                                each item in get_my_contact
+                                                    tr
+                                                        td= item.name
+                                                        td= CONST.genderArr[item.gender]
+                                                        td= item.age
+                                                        td= item.telephone
+                            //-常用联系地址
+                            if !get_my_address_success
+                                aside #{JSON.stringify(get_my_address)}
+                            else
+                                if eleAuthority&&eleAuthority.AccountAddressList
+                                    table.table
+                                        thead
+                                            tr
+                                                th  地区
+                                                th  详细地址
+                                        tbody
+                                            if !get_my_address.length
+                                                tr
+                                                    td(colspan='2') 暂无数据
+                                            else
+                                                each item in get_my_address
+                                                    tr
+                                                        td #{JSON.parse(item.province).name}#{JSON.parse(item.city).name}#{JSON.parse(item.area).name}
+                                                        td #{item.addressDetail}
+                            //-常用联系地址
+                            if !get_my_chats_success
+                                aside #{JSON.stringify(get_my_chats)}
+                            else
+                                if eleAuthority&&eleAuthority.AccountChatsList
+                                    table.table
+                                        thead
+                                            tr
+                                                th  发送者
+                                                th  接收者
+                                                th  发送时间
+                                                th  问题描述
+                                                th  对话记录
+                                        tbody
+                                            if !get_my_chats.length
+                                                tr
+                                                    td(colspan='5') 暂无数据
+                                            else
+                                                each item,i in get_my_chats
+                                                    tr(class="#{item.fromUser} #{item.toUser}",data-fromUserId="#{item.fromUser}",data-toUserId="#{item.toUser}")
+                                                        td.fromUser #{item.fromUser}
+                                                        td.toUser #{item.toUser}
+                                                        td #{moment(item.updatedAt).format("YYYY-MM-DD hh:mm:ss")}
+                                                        td #{JSON.parse(item.body).msg}
+                                                        td
+                                                            a.chatBtn(href='javascript:;') 对话记录
+                                include ../chat
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/users/user_detail.js')

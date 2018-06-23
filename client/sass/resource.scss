@@ -1,0 +1,220 @@
+@import "settings.scss";
+
+table{
+  text-align:left;
+}
+
+@font-face {
+  font-family:'Glyphicons Halflings';
+  font-style:normal;
+  src:local('☺︎'), url("../fonts/glyphicons-halflings-regular.woff2") format("woff");
+  /* Copyright (c) 1992 Adobe Systems Incorporated. All Rights Reserved. Myriad is a trademark of Adobe Systems Incorporated. */
+}
+.toolbar{
+  margin-bottom: 20px;display: inline-block;border-radius:5px;overflow: hidden;
+
+  span{
+    @include btn($navBgColor,$navBgOnColor);border-radius: 0px;border-left: 1px solid $bdrc1;margin: 0px;
+    &:hover{background-color:$navBgOnColor;color: $color-white}
+    &.delBtn,&.usableBtn,&.disableBtn{background-color:$bgc_red_d9;
+      &:hover{background-color: $bgc_red_ff;}
+    }
+    &.red{}
+    &.blue{background-color:$navBgOnColor;color: $color-white;
+      &:hover{background-color: #2782D8;}
+    }
+  }
+}
+
+.popupBox.listPopBox{
+  overflow: scroll;
+}
+
+.resource{
+  border: 1px solid $bdrc1;
+  .thead{
+    background-image: -webkit-gradient(linear, 0 0%, 0 100%, from(#fdfdfd), to(#eaeaea));
+    background-image: -webkit-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    background-image: -moz-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    background-image: -ms-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    background-image: -o-linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    background-image: linear-gradient(top, #fdfdfd 0%, #eaeaea 100%);
+    border-bottom: 1px solid $bdrc1;
+    span{line-height:40px;font-weight: bold;display: inline-block;width: 15%;box-sizing: border-box;border-left: 1px solid $bdrc1;margin-left: -1px;padding-left: 10px;}
+  }
+  //dl{
+  //  dt,dd{
+  //    border-bottom: 1px solid $bdrc1;
+  //    span{line-height: 30px;display: inline-block;width: 15%;box-sizing: border-box;}
+  //    &:nth-child(odd){
+  //      background: $bgc_ef ;
+  //    }
+  //  }
+  //  dd{
+  //    span{
+  //      &:nth-child(3){padding-left:20px;}
+  //      padding-left: 10px;
+  //    }
+  //  }
+  //}
+  span{
+    &.w1{width: 50px;  }
+    &.w2{width: 50px;text-align: center;  }
+    &.w3{width: 15%;  }
+    &.w4{width: 20%;  }
+    &.w5{width: 25%;  }
+    &.w6{width: 30%;  }
+    &.w7{width: 35%;  }
+    &.w8{width: 80px;  }
+    &.w9{width: 100px;  }
+  }
+  ul,ol{
+    li{
+      border-bottom: 1px solid $bdrc1;
+      //&:nth-of-type(odd){
+      //  background: $bgc_ef ;
+      //}
+      &:hover{background-color: $bgc_blue_e4;}
+      &:after{
+        display:block;font-size:0;content: " ";clear:both;height:0;
+      }
+      span{line-height: 30px;height:30px;overflow:hidden;display:block;float: left;width: 15%;box-sizing: border-box;border-left: 1px solid $bdrc1;margin-left: -1px;padding-left: 10px;
+        &.icon{
+          padding-left: 10px;
+          &:before{
+            content: "\e118";box-sizing: border-box;font-family: 'Glyphicons Halflings';padding-right:10px;
+          }
+        }
+        &.noChild{
+          &:before{
+            content: '';}
+        }
+
+      }
+
+      &.tree_open{
+        .icon{
+          //background-color: #000000;
+          &:before{
+            content: "\e117";box-sizing: border-box;font-family: 'Glyphicons Halflings';padding-right:10px;
+          }
+        }
+        span{
+          &.noChild{
+            &:before{
+              content: '';}
+          }
+        }
+      }
+    }
+  }
+  ul{
+    > li{
+      background: $bgc_ef ;
+    }
+  }
+
+  ol{
+    display: block;
+    //&:nth-of-type(even){
+    //  background: $bgc_ef ;
+    //}
+    li span.name{padding-left: 50px;}
+    ol{
+      li span.name{padding-left: 80px;}
+      ol{
+        li span.name{padding-left: 110px;}
+        ol{
+          li span.name{padding-left: 140px;}
+        }
+      }
+    }
+  }
+}
+.resource li{
+  //&:nth-child(2n){
+  &:nth-of-type(even){
+    //background: $bgc_ef ;
+  }
+}
+
+.resource{
+  .tbody{
+    ul{
+      padding:0;
+    }
+  }
+}
+
+.tbody{
+  ul{
+    li{
+      &:nth-of-type(odd){
+        background: $color-white ;
+      }
+      &.success{
+        background-color:$bgc_blue_e4 ;
+      }
+    }
+  }
+  aside{
+    line-height: 40px;text-align: center;
+  }
+}
+.menuBox{
+  width: 450px;max-height: 600px;
+  ul{
+    li{
+      padding: 5px 0;
+      label{width: 100px;text-align: right;padding-right: 5px;display: inline-block;}
+      input{width: 220px;box-sizing: border-box;}
+      select{width: 220px;line-height: 28px;height: 28px;padding-left: 3px;}
+      em{color:#ff0000;padding-left: 5px;}
+      .isDefault{width: auto; margin-right:20px;position: relative;top: 2px;}
+    }
+  }
+}
+
+//分页
+.pagination{
+  float: right;display: inline;margin: 10px 10px 20px 0 ;
+  a{
+    padding: 0 8px;cursor: pointer;margin-right: 5px;background-color:#e4ebf2; line-height: 28px; display: inline-block;
+    &:hover,&.current{
+      background-color:$navBgOnColor;
+      color:$color-white;
+    }
+
+  }
+  .current{
+    background-color:$navBgColor;color:$color-white;padding: 0 10px; margin-right: 5px;
+  }
+  span{
+    padding: 0 8px;margin-right: 5px;background-color:#e4ebf2; line-height: 28px; display: inline-block;
+    &.disabled{
+      background-color:$bdrc1;
+    }
+    &:not(.disabled):hover,&.current:not(.disabled){
+      cursor:pointer;
+      background-color:$navBgOnColor;
+      color:$color-white;
+    }
+  }
+
+}
+
+.icon-tree.icon-opened-folder{
+  &:before{
+    content: "\e118";box-sizing: border-box;font-family: 'Glyphicons Halflings';padding-right:10px;
+  }
+}
+
+.icon-tree.icon-closed-folder{
+  &:before{
+    content: "\e117";box-sizing: border-box;font-family: 'Glyphicons Halflings';padding-right:10px;
+  }
+}
+
+.listPopBox{
+  overflow-y: scroll;
+}

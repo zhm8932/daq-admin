@@ -1,0 +1,57 @@
+extends ../layout
+block content
+    link(href='/css/treats/register_detail.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：治疗业务>挂号订单>挂号详情
+            section#content.register_detail
+                .detail
+                    h3 用户信息
+                    p 订单编号：#{data.id}
+                    //-p 就诊人：
+                        a(href='/users/account/detail/#{data.accountId}' target='_blank') #{data.patient}
+                    //-p 联系方式：#{data.telNum}
+                    p 下单时间：#{moment(data.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                    p 就诊时间：#{moment(data.start).format('YYYY-MM-DD HH:mm:ss')}-#{moment(data.end).format('HH:mm:ss')}
+                    p 就诊状态：#{CONST.reservationStatusArr[data.reservationStatus]}
+                    p 就诊姓名：
+                        a(href='/users/account/detail/#{data.accountId}' title=data.patient target='_blank') #{data.patient}
+                    p 联系电话：#{data.telNum}
+                    p 门诊费用：
+                        if data.cost
+                            |¥#{data.cost/100}
+                        else
+                            |无
+                    p 支付方式：#{data.payWay}
+                    if data.remark
+                        p 备注信息：#{data.remark}
+
+                    h3 预约信息
+                    if data.doctorDTO
+                        figure.clearfix
+                            img(src='#{data.doctorDTO.doctorPhoto}')
+                            figcaption
+                                p: a(href='/treats/doctor/detail/#{data.doctorDTO.id}') #{data.doctorDTO.doctorName}
+                                p
+                                    a(href='/treats/clinic/detail/#{data.doctorDTO.hospitalReDepartments[0].hospitalId}' target='_blank') #{data.doctorDTO.hospitalReDepartments[0].hospitalName}
+
+                        p 预约科室：#{data.doctorDTO.hospitalReDepartments[0].departmentName}
+                        p 医生职称：
+                            if get_doctor_title_success
+                                each arr in get_doctor_title
+                                    if arr.id == data.doctorDTO.titleId
+                                        | #{arr.name}
+                        p 医生状态：#{CONST.doctorStatusArr[data.doctorDTO.doctorStatus]}
+
+
+
+                    h3 病情描述
+
+                    if data.description
+                        p #{data.description}
+
+
+
+
+    include ../includes/footer

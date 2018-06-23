@@ -1,0 +1,121 @@
+extends ../layout
+block content
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：活动中心>优惠券管理>详情
+            section#content
+                .tab
+                    //-a.btn(href='/activity/coupon/add') 新增优惠券
+                    //-form.search(method='get',action='/activity/coupons')
+                        label 用户账号：
+                        input(type='text',name='name',value=queryObj.name)
+                        label 领取时间：
+                        input(type='text',name='name',value=queryObj.name)
+                        //-span.delete 清除
+                        //-label 状态：
+                        //-select(name='couponState')
+                            - var statusArr= [{'1':'未使用'},{'2':'已使用'},{'3':'已过期'}]
+                            option(value='') 全部
+                            -for(var i=0,len= statusArr.length;i<len;i++){
+                                - var bSelect = null
+                                each index,str in statusArr[i]
+                                    if str == queryObj.couponState
+                                        - bSelect = true
+                                    option(value=str,'selected'=bSelect) #{index}
+                            -}
+                        label 门诊：
+                        if !get_hospital_all_success
+                            aside.red 门诊获取失败
+                        else
+                            select(name='fitArea')
+                                option(value='') 全部
+                                each item in get_hospital_all
+                                    - var bSelect = null
+                                    if item.hospitalCode == queryObj.fitArea
+                                        - bSelect = true
+                                    option(value='#{item.hospitalCode}',selected=bSelect) #{item.hospitalName}
+                        button(type='submit') 搜索
+                    .hd.clearfix
+                        span: a(href='/activity/coupons/detail/1?id=#{id}&ftype=#{ftype}') 未使用
+                        span: a(href='/activity/coupons/detail/2?id=#{id}&ftype=#{ftype}') 已使用
+                        span: a(href='/activity/coupons/detail/3?id=#{id}&ftype=#{ftype}') 已过期
+                if !success
+                    aside #{data}
+                else
+                    table.table
+                        thead
+                            tr
+                                th  序号
+                                th  领取账号
+                                th  优惠券名称
+                                th
+                                    case ftype
+                                        when 'discount'
+                                            |折扣率
+                                        when 'cash'
+                                            |面额
+                                        default
+                                            |面额/折扣率
+                                th  条件
+                                th  领取量
+                                th  适用门诊
+                                //-th  状态
+                                th  领取时间
+                                if useState==2
+                                    th  使用时间
+
+                        tbody
+                            -var useStateArr = ['未知','未使用','已使用','已过期']
+                            if !data.length
+                                tr
+                                    if useState==2
+                                        td(colspan='9') 暂无数据
+                                    else
+                                        td(colspan='8') 暂无数据
+                            else
+                                each item,index in data
+                                    tr(data-id="#{item.id}")
+                                        td #{resultCount-pageSize*(currentpage-1)-index}
+                                        //td #{len-i}
+                                        td: a(href='/users/account/detail/#{item.accountId}',target='_blank') #{item.account}
+                                        td #{item.name}
+                                        td
+                                            case item.ftype
+                                                when 'discount'
+                                                    | #{item.discount.toFixed(1)}折
+                                                when 'cash'
+                                                    | #{(item.faceValue/100).toFixed(2)}元
+                                        td
+                                            if item.mostDeduction
+                                                | 最高抵扣#{item.mostDeduction / 100}元
+                                            else
+                                                | 满#{item.enoughMoney / 100}元
+
+                                        //td #{item.limitGet}
+                                        td 1
+                                        td
+                                            if item.fitArea
+                                                - var fitArea = JSON.parse(item.fitArea)
+                                                -for(var i=0,len=fitArea.length;i<len;i++){
+                                                if(i < len - 1)
+                                                    p #{fitArea[i].hospitalName}，
+                                                else
+                                                    p #{fitArea[i].hospitalName}
+                                                -}
+
+
+                                        //-td #{useStateArr[item.useState]}
+                                        td #{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                                        if useState==2
+                                            td #{moment(item.updateat).format('YYYY-MM-DD HH:mm:ss')}
+
+
+
+                    //-分页
+                    include ../includes/pagination
+                //-aside 备注：领取优惠券的用户名称和账号信息暂无
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/activity/coupon.js')

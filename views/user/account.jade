@@ -1,0 +1,68 @@
+extends ../layout
+block content
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：用户管理 > 账号管理
+            section#content
+                if !success
+                    aside #{data.msg}:#{JSON.stringify(data)}
+                else
+                    if eleAuthority&&eleAuthority.AccountSearch
+                        form.search(method='get',action='/users/account')
+                            label 手机号码：
+                            input(type='search',placeholder='模糊查询',name='mobile',value=queryStr.mobile)
+                            label 用户账号：
+                            input(type='search',placeholder='精确查询',name='account',value=queryStr.account)
+                            label 账号状态：
+                            select(name='status')
+                                - var statusArr= [{'normal':'正常'},{'disable':'禁用'}]
+                                    option(value='') 全部
+                                -for(var i=0,len= statusArr.length;i<len;i++){
+                                    - var bSelect = null
+                                    each index,str in statusArr[i]
+                                            if str == status
+                                                - bSelect = true
+                                            option(value='#{str}','selected'=bSelect) #{index}
+                                -}
+
+                            button(type='submit') 搜索
+                    table.table
+                        thead
+                            tr
+                                th  序号
+                                th  注册编号
+                                th  手机号码
+                                th  用户账号
+                                th  注册时间
+                                th  账号状态
+                                if eleAuthority&&eleAuthority.AccountDetail
+                                    th  操作
+                        tbody
+                            if !data.length
+                                tr
+                                    td(colspan='6') 暂无数据
+                            else
+                               each item,i in data
+                                tr
+                                    td #{resultCount-pageSize*(currentpage-1)-i}
+                                    td #{item.accountCommon.id}
+                                    td #{item.accountCommon.mobile}
+                                    td #{item.accountCommon.account}
+                                    td #{moment(item.accountCommon.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                                    td
+                                        case item.accountExtends.accountStatus
+                                            when 'normal'
+                                                span.statue 正常
+                                            when 'disable'
+                                                span.red 违禁
+                                    if eleAuthority&&eleAuthority.AccountDetail
+                                        td: a(href='/users/account/detail/#{item.accountCommon.id}') 详情
+
+                    //-分页
+                    include ../includes/pagination
+
+
+
+    include ../includes/footer
+    //script(src="/js/account.js")

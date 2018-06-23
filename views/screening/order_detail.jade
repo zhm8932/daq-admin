@@ -1,0 +1,126 @@
+extends ../layout
+block content
+    link(href='/css/booking_detail.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：筛查业务>订单管理>订单详情
+            section#content
+              mixin addition(num)
+                  if num
+                    |￥#{(parseInt(num)/100).toFixed(2)}
+                  else
+                    |#{num}
+              if !get_order_detail_success
+                 div= data
+              else
+                .detail-booking
+                    h3 订单编号：#{data.id}
+                        span.statue.pd2.red 状态：#{CONST.orderStatusArr[data.orderState]}
+
+                    h3 订单跟踪
+                    table.table_th
+                        thead
+                            tr
+                                th 处理时间
+                                th 处理信息
+                                th 备注
+                                th 操作人
+                        tbody
+                          if data.orderLogDTOList
+                             - var orderLogDTOList = data.orderLogDTOList;
+                              each item in orderLogDTOList
+                                tr
+                                    td
+                                        if item.createdAt
+                                            #{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                                    td #{item.description}
+                                    td #{item.reason}
+                                    td #{item.operatorName}
+                          else
+                              tr
+                                td(colspan='4') 暂无记录
+
+
+                    h3 付款信息
+                    if data.isOnline==1
+                        if data.orderPayDTOList
+                            each item in data.orderPayDTOList
+                                p 支付方式： #{CONST.ftypeArr[item.ftype]}
+                                p 支付金额：
+                                  em.red
+                                    +addition(item.cost)
+                                p 付款时间：#{moment(data.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+                        else
+                            p.red 提示：未获取到付款信息
+                    else
+                        p.red 线下支付
+
+                    h3 产品清单
+                    if data.goodsItemDTOs
+                        table.table_th
+                            thead
+                                tr
+                                    th 产品图片
+                                    th.tl 产品信息
+                                    th 使用密码
+                                    th 订单价
+                                    th.tl 取样方式
+                            tbody
+                              if data.goodsItemDTOs
+                                  each item in data.goodsItemDTOs
+                                    tr
+                                        if item.appCoverImages||item.pcCoverImages||item.mobileCoverImages
+                                            -var images = item.appCoverImages||item.pcCoverImages||item.mobileCoverImages
+                                            td(data-imageUrls='#{images[0]}'): img(src="#{images[0]}")
+                                        else
+                                            td
+                                        td.tl
+                                            a(href='/screening/meal/detail/#{item.goodsId}',target='_blank') #{item.goodsName}
+                                            p #{item.fitPeople}
+                                        td #{item.reservationPwd}
+                                        td
+                                            +addition(item.dealPrice)
+                                        td.tl
+
+                                            if item.transmitType
+                                                each arrSub,i in JSON.parse(item.transmitType)
+                                                    p= CONST.transmitTypeObj[i]
+                                                        |（<em>服务费:</em>
+                                                        +addition(arrSub)
+                                                        |）
+                                            if item.address
+                                               //--var address = JSON.parse(item.address)
+                                               p 取样地址：#{item.address}
+                                                  //-each arr in address
+                                                      |#{arr.name}
+                                            p 服务门诊：
+                                                if item.hospital
+                                                    - var hospital = JSON.parse(item.hospital)
+                                                | #{hospital.hospitalName}
+
+
+
+                    aside
+                        if data.feeMap.coupon_fee
+                            p.red 优惠券：
+                                |-
+                                +addition(data.feeMap.coupon_fee)
+                                |元
+                        .costBox
+                          p
+                            +addition(data.feeMap.goods_price)
+                            if data.feeMap.coupon_fee
+                                | -
+                                em.red
+                                    +addition(data.feeMap.coupon_fee)
+                            | +
+                            +addition(data.feeMap.service_fee)
+                            | =
+                            +addition(data.totalCost)
+                          p 应付总额：
+                            em.red
+                              +addition(data.totalCost)
+
+
+    include ../includes/footer

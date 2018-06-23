@@ -1,0 +1,1 @@
+define(function(e,n,i){function t(e){}e("jquery"),i.exports={validateTel:t}});

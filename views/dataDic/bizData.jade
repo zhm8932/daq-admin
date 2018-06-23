@@ -1,0 +1,39 @@
+extends ../layout
+block content
+    link(href='/css/dataDic.css',rel='styleSheet')
+    link(href='/css/diyUpload.css',rel='styleSheet')
+
+    .container.dataDic
+        include ../includes/nav
+        .main
+            .position 当前位置：数据字典>业务数据
+            section#content
+                ul.tip-box
+                    li 数据字典的数据请不要轻易改动
+                .tab-nav
+                    .hd.clearfix#nav
+                        //span#goods_category: a(href='/sysSetting/dataDicView?dicType=goods_category&isShowPages=false') 商品栏目
+                        //span#article_category: a(href='/sysSetting/dataDicView?dicType=article_category&isShowPages=false') 文章类型
+                        //span#district: a(href='/sysSetting/dataDicView?dicType=district&isShowPages=false') 开通地区
+                        //span#sample_category: a(href='/sysSetting/dataDicView?dicType=sample_category&isShowPages=false') 样品类型
+                        each item in data
+                            span(id="#{JSON.parse(item.others).type}",data-id="#{item.id}",data-name="#{item.name}") #{item.name}
+
+                .toolbar
+                    if(eleAuthority && eleAuthority.DataDicBizAdd)
+                        span.btn.addBtn 添加
+                    if(eleAuthority && eleAuthority.DataDicBizUpdate)
+                        span.btn.updateBtn 修改
+                    if(eleAuthority && eleAuthority.DataDicBizDel)
+                        span.btn.delBtn.dangerBtn 删除
+                    if(eleAuthority && eleAuthority.DataDicBizUpdateState)
+                        span.btn.updateStateBtn.dangerBtn 启用/禁用
+                    if(eleAuthority && eleAuthority.DataDicUpdateOnline)
+                        span#updateOnlineState.btn.dangerBtn.none 上线/下线
+
+                div#bizTable
+
+    input(type="hidden",value="",name="type",id="dicType")
+    include ../includes/footer
+    script.
+        seajs.use('/js/dataDic/bizData.js');

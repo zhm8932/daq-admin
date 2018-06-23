@@ -1,0 +1,41 @@
+extends ../layout
+block content
+    //-link(href='/css/booking_detail.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：治疗业务>门诊管理>门诊详情
+            section#content
+                .detail
+                    h3 基本信息
+                    p 门诊名称：#{data.hospitalName}
+                    p 门诊编号：#{data.hospitalCode}
+                    p 成立时间：#{moment(data.establishedTime).format('YYYY-MM-DD HH:mm:ss')}
+                    p 门诊电话：#{data.telephone}
+                    p 所属地区：
+                        if !get_city_all_success
+                            -region= '地区获取失败'
+                        else
+                            -var region = ''
+                            each item in get_city_all
+                                if item.id == data.province
+                                    -region +=item.name
+                                    each city in item.children
+                                        if city.id == data.city
+                                            -region +=city.name
+                                            each district in city.children
+                                                if district.id == data.district
+                                                    -region +=district.name
+                            span#city #{region}
+                    p 门诊地址：
+                        span#address #{data.address}
+                    #allmap
+                    p 门诊介绍：#{data.description}
+
+                    aside#log
+
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/clinic_detail.js')

@@ -1,0 +1,48 @@
+@import "settings.scss";
+
+.detail-main{
+  dt{ width:510px;float: left; text-align: center;position: relative;margin-right: 10px;}
+  dd{ padding-left: 20px;box-sizing: border-box;
+    h3{font-size: 20px;
+      em{font-size: 14px; padding-left: 20px;}
+    }
+
+    p{ padding: 10px 0;
+      strong{ font-size: 20px;color: $navBgOnColor;}
+      u{ text-decoration: line-through; padding: 0 10px; font-size: 16px;}
+    }
+  }
+}
+.tab{margin: 20px 0}
+.detail-other{
+  //padding-top: 10px;
+  display: none;border-bottom: 2px solid $bdrc1;
+  .hd{
+    width: 50%;
+    span{margin-right:5px; float: left; border: 1px solid $bdrc1; text-align: center; line-height: 40px; cursor: pointer;box-sizing: border-box;
+      //width: 30%;
+      &.on,&:hover{
+        color: $navBgOnColor; border-color: $navBgOnColor;background-color: $color-white;
+      }
+    }
+  }
+  .con{
+    padding: 10px 0;position: relative;width: 980px;
+    div{
+      display: none;
+    }
+    table{
+      position: relative;
+      td{position: relative}
+    }
+  }
+
+  .goodsImgBox{width: 30%; float: left;margin-right:5%;position: relative;padding-bottom: 10px;
+    h2{font-size: 16px;padding-bottom: 10px;}
+  }
+
+}
+.detail{
+  h3{margin-bottom:10px;}
+}
+

@@ -1,0 +1,254 @@
+extends ../layout
+block content
+    link(href="/css/daterangepicker.css",rel="stylesheet")
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：首页>筛查业务>订单管理
+            section#content
+
+                if eleAuthority&&eleAuthority.OrderSearch
+                    form.search(method='get',action=actionUrl)
+                        label 手机号码：
+                        input(type='text',name='phoneNum',value=queryObj.phoneNum)
+                        label 密码：
+                        input(type='text',name='password',value=queryObj.password)
+                        label 时间：
+                        input.date(type='text',name='date',value=queryObj.date)
+                        //|至
+                        //input(type='text',name='endTime',value=queryObj.endTime)
+                        label 服务门诊：
+                        if !get_hospital_all_success
+                            aside.red 门诊获取失败
+                        else
+                            select(name='fitArea')
+                                option(value='') 全部
+                                each item in get_hospital_all
+                                    - var bSelect = null
+                                    if item.hospitalCode == queryObj.fitArea
+                                        - bSelect = true
+                                    option(value='#{item.hospitalCode}',selected=bSelect) #{item.hospitalName}
+                        //-label 所属地区：
+                        //-if getCity
+                            select(name='categoryId',value=queryObj.categoryId)
+                                option(value='') 全部
+                                each item in getCity
+                                    - var bSelect = null
+                                    if item.id == queryObj.categoryId
+                                        - bSelect = true
+                                    option(value='#{item.id}',selected=bSelect) #{item.name}
+                        //-else
+                            span.red 地区获取失败
+                        button(type='submit') 搜索
+                .tab
+                    //新增预约功能先隐藏掉
+                    //-a.btn(href='/screening/order/book_order') 新增预约
+                    .hd.clearfix
+                        if eleAuthority&&eleAuthority.OrderHasPaidList
+                            span: a(href='/screening/order/list/2') 已支付订单
+                        if eleAuthority&&eleAuthority.OrderNotPaidList
+                            span: a(href='/screening/order/list/1') 未支付订单
+                        if eleAuthority&&eleAuthority.OrderInRefundList
+                            span: a(href='/screening/order/list/4') 退款中
+                        if eleAuthority&&eleAuthority.OrderHasRefundList
+                            span: a(href='/screening/order/list/5') 已退款
+                        if eleAuthority&&eleAuthority.OrderHasCancelList
+                            span: a(href='/screening/order/list/3') 已取消订单
+                if !get_order_list_success
+                    div= data
+                else
+                    //-- var transmitTypeObj = {"sampling_home":"上门取样","sampling_delivery":"快递收样","sampling_clinic":"门诊取样"}
+                    mixin td2(arr)
+                        td: span.break #{arr.goodsId}
+                        if orderState==2
+                            td!= CONST.reservationStateArr[arr.reservationState]
+
+                    mixin goods_detail(arr)
+                         .tl
+                            p: a(href='/screening/meal/detail/#{arr.goodsId}',target='_blank')
+                                 if arr.goodsName&&arr.goodsName.length>20
+                                     em(title=arr.goodsName) #{arr.goodsName.substring(0,16)}……
+                                 else
+                                     |#{arr.goodsName}
+                            p 套餐价格：￥#{parseFloat(arr.dealPrice)/100}
+                            p 样品类型：
+                                if arr.transmitItems
+                                    - var transmitItemsArr = JSON.parse(arr.transmitItems)
+                                    - for(var i=0;len=transmitItemsArr.length,i<len;i++){
+                                        if(i < len - 1)
+                                            if transmitItemsArr[i].name != ''
+                                                | #{transmitItemsArr[i].name}，
+                                        else
+                                            if transmitItemsArr[i].name != ''
+                                                | #{transmitItemsArr[i].name}
+                                    -}
+                            p 检查目的：#{arr.fitPeople}
+                            p 服务门诊：
+                             if arr.hospital
+                                 - var hospital = JSON.parse(arr.hospital)
+                                 |#{hospital.hospitalName}
+                    mixin goods_operate(item,arr)
+                            a(href='/screening/order/detail/#{item.id}',target='_blank') 订单详情
+
+                            if item.isOnline == 1
+                                if eleAuthority&&eleAuthority.OrderApplyRefund
+                                    //-if (item.orderState==2)&&(arr.reservationState==0)
+                                    if item.orderState==2&&!item.isRefund
+                                        a.applyRefund(href='javascript:;',data-type='1') 申请退款
+                                if item.orderState==1
+                                    if eleAuthority&&eleAuthority.OrderHasCancelList
+                                        //-a.cancelOrder(href='javascript:;',data-type='4') 取消订单
+                                if item.orderState==4
+                                    if eleAuthority&&eleAuthority.OrderCancelRefund
+                                        a.cancelRefund(href='javascript:;',data-type='2') 取消退款
+                                    if eleAuthority&&eleAuthority.OrderConfirmRefund
+                                        a.confirmRefund(href='javascript:;',data-type='3') 确认退款
+                            else
+                                p.red 线下订单
+
+                    mixin transmitType(arr)
+                            if arr.transmitType
+                                each arrSub,i in JSON.parse(arr.transmitType)
+                                    p= CONST.transmitTypeObj[i]
+                    mixin totalCost(item)
+                        p.red ￥#{(parseFloat(item.totalCost)/100).toFixed(2)}
+                        if item.feeMap.coupon_fee
+                            p 优惠券：-￥#{parseFloat(item.feeMap.coupon_fee)/100}
+                        if item.feeMap.service_fee
+                            p 服务费：+￥#{parseFloat(item.feeMap.service_fee) / 100}
+                    mixin th(item)
+                        tr.tl(class='#{item.id}')
+                            - var colspan = ''
+
+                            if orderState==2
+                                - colspan=8
+                            else
+                                - colspan=7
+                            th(colspan='#{colspan}')
+                                div.th
+                                    em 订单编号：#{item.id}
+                                    time #{moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+
+
+                                    em.rt.red #{CONST.orderStatusArr[item.orderState]}
+                                    em.rt
+                                        if item.orderPayDTOList
+                                            |支付方式： #{CONST.ftypeArr[item.orderPayDTOList[0].ftype]}
+                    mixin moblie(item)
+                        if item.isOnline==1
+                            a(href='/users/account/detail/#{item.accountId}?type=order' target='_blank') #{item.moblie}
+                        else
+                            |#{item.moblie}
+                    table.table.tableSub
+                        thead
+                            tr
+                                th  订单编号
+                                if orderState==2
+                                    th  状态
+                                th  取样方式
+                                th  套餐信息
+                                th
+                                  case orderState
+                                    when '2'
+                                        |支付时间
+                                    when '1'
+                                        |下单时间
+                                    when '3'
+                                        |支付时间
+                                    when '4'
+                                        |支付时间
+                                    when '5'
+                                        |取消时间
+                                th  下单账号
+                                th  支付金额
+                                th  操作
+                        tbody
+                            if !data.length
+                                - var colspan = ''
+
+                                if orderState == 2
+                                    - colspan=8
+                                else
+                                    - colspan=7
+                                tr
+                                    td(colspan='#{colspan}') 暂无数据
+                            else
+                                each item in data
+                                      if item.goodsItemDTOs&&item.goodsItemDTOs.length==1
+                                          +th(item)
+                                          each arr in item.goodsItemDTOs
+                                            //-div= arr.goodsName
+                                            tr(data-id='#{item.id}',class='#{item.id}')
+                                                +td2(arr)
+                                                td
+                                                    //取样方式
+                                                    +transmitType(arr)
+                                                td
+                                                    //-套餐详情
+                                                    +goods_detail(arr)
+                                                td
+                                                    if orderState == 5
+                                                        | #{moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+                                                    else
+                                                        | #{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                                                td
+                                                    +moblie(item)
+                                                td
+                                                    +totalCost(item)
+
+                                                td
+                                                    //-操作
+                                                    +goods_operate(item,arr)
+                                         else
+                                             - var goodsLen = item.goodsItemDTOs.length;
+                                             +th(item)
+                                             - reservationState = '';
+                                             - isRefund = '';
+
+                                             each arr,i in item.goodsItemDTOs
+                                                 //div 多个子产品-----------:#{arr.goodsName}
+                                                 //-if arr.reservationState==1
+                                                    - isRefund = 1
+                                                 //-tr
+                                                    td 未预约 #{arr.reservationState} reservationState：#{reservationState} isRefund:#{isRefund}
+                                                 if(i==0)
+                                                     tr(data-id='#{item.id}',class='#{item.id}',data-goodsLen=goodsLen)
+                                                         +td2(arr)
+                                                         td
+                                                             //取样方式
+                                                             +transmitType(arr)
+
+                                                         td
+                                                             //-套餐详情
+                                                             +goods_detail(arr)
+
+                                                         //td(rowspan=goodsLen) #{moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+                                                         td(rowspan=goodsLen)
+                                                             if orderState==5
+                                                                 |#{moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+                                                             else
+                                                                 |#{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                                                         td(rowspan=goodsLen)
+                                                            +moblie(item)
+                                                         td(rowspan=goodsLen)
+                                                             +totalCost(item)
+                                                         td(rowspan=goodsLen)
+                                                            //-操作
+                                                            +goods_operate(item,arr)
+                                                 else
+                                                    tr(data-id='#{item.id}',class='#{item.id}',data-goodsLen=goodsLen)
+                                                            +td2(arr)
+                                                            td
+                                                                //取样方式
+                                                                +transmitType(arr)
+                                                            td
+                                                                //-套餐详情
+                                                                +goods_detail(arr)
+
+
+                //-分页
+                include ../includes/pagination
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/screenings/order.js')

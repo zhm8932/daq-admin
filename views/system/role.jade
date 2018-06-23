@@ -1,0 +1,48 @@
+extends ../layout
+block content
+    link(href='/css/resource.css',rel='styleSheet')
+    link(href='/css/diyUpload.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：系统管理>角色管理
+            section#content
+                #roleTabs.tabs
+                    ul.tabs-nav.clearfix
+                        li.active(data-target="#tab1")
+                            a(href="javascript:void(0)") 角色管理
+                    .tabs-bd
+                        #tab1.tabs-bd-panel.active
+                            .toolbar
+                                if(eleAuthority && eleAuthority.RoleAdd)
+                                    span.addBtn.addRoleBtn 添加
+                                if(eleAuthority && eleAuthority.RoleUpdate)
+                                    span.updateBtn.updateRoleBtn 修改
+                                if(eleAuthority && eleAuthority.RoleDel)
+                                    span.delBtn.delRoleBtn 删除
+                                if(eleAuthority && eleAuthority.RoleAssignMenu)
+                                    span.assignMenu.blue 分配菜单资源
+                                if(eleAuthority && eleAuthority.RoleAssignUrl)
+                                    span.assignUrl.blue 分配url访问资源
+                                if(eleAuthority && eleAuthority.RoleAssignEle)
+                                    span.assignEle.blue 分配页面元素资源
+                            if(eleAuthority && eleAuthority.RoleSearch)
+                                form#roleSearchForm
+                                    label 角色名称
+                                    input(name="nameLike",type="text")
+                                    label 角色描述
+                                    input(name="descriptionLike",type="text")
+                                    input.btn.searchBtn(type="button",value="搜索")
+                                    //button.btn.searchBtn 搜索
+                            div.resource
+                                .thead
+                                    span.w1.allCheck: input(type='checkbox')
+                                    span.w4 角色名称
+                                    span.w4 角色描述
+                                    span.w4 角色标识
+                                .tbody#roleList
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/systems/role.js');

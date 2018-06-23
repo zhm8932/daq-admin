@@ -1,0 +1,46 @@
+extends ../layout
+block content
+    link(href='/css/resource.css',rel='styleSheet')
+    link(href='/css/diyUpload.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：资源管理>URL访问管理
+            section#content
+                .toolbar
+                    if(eleAuthority && eleAuthority.ResourceUrlAdd)
+                        span.btn.addBtn 添加
+                    if(eleAuthority && eleAuthority.ResourceUrlUpdate)
+                        span.btn.updateBtn 修改
+                    if(eleAuthority && eleAuthority.ResourceUrlDel)
+                        span.btn.delBtn 删除
+                if(eleAuthority && eleAuthority.ResourceUrlSearch)
+                    form#eleSearchForm.search(action="/resource/url",method="GET")
+                        label URL名称
+                        input(name="nameLike",type="text",value="#{nameLike}")
+                        label URL路径
+                        input(name="urlLike",type="text",value="#{urlLike}")
+                        input.btn#searchBtn(type="submit",value="搜索")
+                div.resource
+                    .thead
+                        span.w1.allCheck: input(type='checkbox')
+                        span.w4 URL名称
+                        span.w7 URL路径
+                        span URL描述
+                    .tbody
+                        if(!data.length)
+                            aside 暂无数据
+                        else
+                            ul
+                                each item in data
+                                    li(data-level=item.level,data-id=item.id)
+                                        span.w1.check: input(type='checkbox')
+                                        span.w4.name #{item.name}
+                                        span.w7.url #{item.url}
+                                        span.description #{item.description}
+                    include ../includes/pagination
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/resources/url.js');

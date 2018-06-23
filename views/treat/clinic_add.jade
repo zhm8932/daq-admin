@@ -1,0 +1,72 @@
+extends ../layout
+block content
+    link(href="/css/daterangepicker.css",rel="stylesheet")
+    link(href='/css/treats/clinic_add.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：治疗业务>门诊管理>新增门诊
+            section#content
+                //form.formBox(method='POST',action='/activity/coupon/add')
+                .formBox
+                    ul
+                        h3 新增门诊
+                        li
+                            label 门诊名称：
+                            input(type='text',name='hospitalName')
+                            mark.red *必填
+                        li
+                            label 成立时间：
+                            input.time(type='text',name='establishedTime')
+                            mark.red *必填
+                        li
+                            label 地区：
+                            input.region(type='text',name='region')
+                            mark.red *必填
+
+                            .area
+                                if !get_city_all_success
+                                    em.red 地区获取失败
+                                else
+                                    input.province(type='hidden',name='province')
+                                    input.city(type='hidden',name='city')
+                                    input.district(type='hidden',name='district')
+                                    ul.provinces
+                                        each item in get_city_all
+                                            li
+                                                em(data-id=item.id) #{item.name}
+                                                    i
+                                                if item.children
+                                                    .citys
+                                                      ul
+                                                        each city in item.children
+                                                            li
+                                                                em(data-id=city.id) #{city.name}
+                                                                    i
+                                                                if city.children
+                                                                    .districts
+                                                                      ul
+                                                                        each district in city.children
+                                                                            li
+                                                                                em(data-id=district.id) #{district.name}
+
+
+                        li
+                            label 详细地址：
+                            input(type='text',name='address')
+                            mark.red *必填
+                        li
+                            label 门诊电话：
+                            input(type='text',name='telephone')
+
+                        li
+                            label 门诊介绍：
+                            textarea(rows='5',name='description',id="description")
+
+
+                    div
+                        button.submitBtn 保存
+
+    include ../includes/footer
+    script.
+        seajs.use(src='/js/treat/clinic_add.js')

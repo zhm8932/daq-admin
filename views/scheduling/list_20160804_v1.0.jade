@@ -1,0 +1,183 @@
+extends ../layout
+block content
+    link(href="/css/daterangepicker.css",rel="stylesheet")
+    link(href='/css/scheduling/scheduling.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：排班系统> 排班管理
+            section#content.scheduling
+                form.search(method='get',action='/scheduling/list')
+                    label 时间段：
+                    //-input.startDate.dbDatew(type='text',name='startDate',value='2016-03-14至2016-03-20')
+                    input.startDate.dbDatew(type='text',name='startDate',value=queryObj.startDate)
+                    //-select.dateWeek(name='startDate',value=queryObj.startDate)
+                    //-input.startDate.dbDatew(type='text',name='startDate',value=queryObj.startDate)
+                    //-.dateWeek
+                        ul
+
+                    label 所属门诊：
+                    if get_hospital_all_success
+                        select(name='hospitalId',value=queryObj.hospitalId)
+                            option(value='') 全部
+                            each item in get_hospital_all
+                                - var bSelect = null
+                                if item.id == queryObj.hospitalId
+                                    - bSelect = true
+                                option(value='#{item.id}',selected=bSelect) #{item.hospitalName}
+                    else
+                        span.red 门诊获取失败
+                    label 医生：
+                    input(type='text',name='doctor',value=queryObj.doctor)
+                    button(type='submit') 搜索
+                if !success
+                    aside #{JSON.stringify(data)}
+                else
+                   table.table
+                    thead
+                        tr
+                            th  医生
+                            th  所属门诊
+                            th  放号
+                            each w,i in weekdays
+                                th(colspan=3)  #{w} #{CONST.weekCn[i]}
+                            th(colspan=3)  操作
+                        tr
+                            th
+                            th
+                            th
+                            -for(var i=0;i<7;i++){
+                                th: em 上午
+                                th: em 下午
+                                th: em 晚上
+                            -}
+                            th
+                    tbody
+                        if !data.length
+                            tr
+                                td(colspan='25') 暂无数据
+                        else
+                            each item in data
+                                tr(data-doctorId=item.doctorId,data-hospitalId=item.hospitalId)
+                                    td: a(href='/treats/doctor/detail/#{item.doctorId}',target='_blank') #{item.doctorName}
+                                    td: a(href='/treats/clinic/detail/#{item.hospitalId}',target='_blank') #{item.hospitalName}
+                                    td: a(href='/scheduling/numbers/set_numbers/#{item.doctorId}',target='_blank') 设置
+                                    if item.regDayList
+                                        each arrs,dayOfWeek in item.regDayList
+                                            each arr,timeSlot in arrs.regTimeList
+                                                if arr.set
+                                                    if arr.hasSetSchedule
+                                                        //-//是否设置排班
+                                                        if arr.timeOut
+                                                            td.tc_gray2
+                                                                p #{arr.consume}/#{arr.capacity}
+                                                                //p 过期
+                                                                if arr.serviceStatus
+                                                                    p 出诊
+                                                                else
+                                                                    p.red 停诊
+
+                                                        else
+                                                            td
+                                                                p #{arr.consume}/#{arr.capacity}
+                                                                if arr.serviceStatus
+                                                                    p 出诊
+                                                                else
+                                                                    p.red 停诊
+
+                                                    else
+                                                        if arr.timeOut
+                                                            td
+                                                        else
+                                                            if arr.open
+                                                                td.isSet(data-dayOfWeek=dayOfWeek + 1,data-timeSlot=timeSlot + 1,data-day=arrs.day,data-set="#{arr.set}")
+                                                                    | 未排班
+                                                            else
+                                                                td
+                                                else
+                                                    td.noneSoruce
+                                                //-if arr.hasSetSchedule
+                                                    //-//是否设置排班
+                                                    td
+                                                        p #{arr.consume}/#{arr.capacity}
+                                                        if arr.serviceStatus
+                                                            p 出诊
+                                                        else
+                                                            p.red 停诊
+
+                                                //-else
+                                                        //-if arr.timeOut
+                                                            //-是否过期
+                                                            td(data-dayOfWeek=dayOfWeek + 1,data-timeSlot=timeSlot + 1,data-day=arrs.day)
+                                                                p 已过期
+
+                                                        if arr.set
+                                                            //-是否设置号源
+                                                            td.isSet(data-dayOfWeek=dayOfWeek + 1,data-timeSlot=timeSlot + 1,data-day=arrs.day,data-set="#{arr.set}")
+                                                                if arr.open
+                                                                    //--是否开放号源
+                                                                    |开放
+                                                                else
+                                                                    |未排班
+                                                                //if arr.open
+                                                                //    //--是否开放号源
+                                                                //    |已排班
+                                                                //    //input(type='checkbox',checked=true)
+                                                                //else
+                                                                //    //--未开放号源
+                                                                //    em.red 未排班
+                                                                    //input(type='checkbox')
+                                                        else
+                                                            //-没有设置号源
+                                                            td.noneSoruce
+                                                                //input(type='checkbox')
+                                    //-each arr in item.scheduleTimeSlotDTOList
+                                          td
+                                              if arr.scheduleStatus == 0
+                                                  p 无号源
+                                              if arr.scheduleStatus == 1
+                                                  em #{arr.consume}/#{arr.capacity}
+                                                  p 时段:#{arr.timeSlot}
+                                                  p 星期:#{arr.dayOfWeek}
+                                                  p 已过期
+                                              if arr.scheduleStatus == 2
+                                                  em #{arr.consume}/#{arr.capacity}
+                                                  p 时段:#{arr.timeSlot}
+                                                  p 星期:#{arr.dayOfWeek}
+                                                  p 可排班
+                                              if arr.scheduleStatus == 3
+                                                  em #{arr.consume}/#{arr.capacity}
+                                                  p 时段:#{arr.timeSlot}
+                                                  p 星期:#{arr.dayOfWeek}
+                                                  if arr.serviceStatus == 0
+                                                      p.red 停诊
+                                                  else
+                                                      p 出诊
+
+                                    //-td: a.saveBtn(href='javascript:;') 保存
+                                    td: a.editBtn(href='javascript:;') 修改
+
+                include ../includes/pagination
+
+                aside.clear
+                    h4 说明：
+                    p
+                        label 灰色背景块：
+                            |表示没有设置号源
+                    p
+                        label 白色背景块：
+                            |表示设置号源，但是没有放号
+                    p
+                        label 未排班：
+                            |表示设置号源，已经放号，但是没有排班
+                    p
+                        label 号源数为灰色：
+                            |表示已过期的排班
+                    p
+                        label 号源数为黑色：
+                            |表示未过期的排班
+
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/scheduling/list.js')

@@ -1,0 +1,26 @@
+@import "../settings";
+@import "scheduling";
+.table{
+  thead{
+    th{
+      padding: 5px 10px;
+      span,a{ padding: 0 10px;cursor: pointer;margin: 0px;
+        //&:hover{ color: $navBgOnColor;}
+      }
+    }
+  }
+  tbody{
+    td{padding:5px 0;
+      input{width: 60px; margin:0 10px;padding: 0 5px;height: 26px;line-height: 5px; box-sizing: border-box;}
+      select{width: 100px;line-height: 28px;height: 28px;}
+    }
+  }
+}
+.topBasic{
+  h2{font-size: 18px;}
+  h4{color: #FF0000;}
+  em{padding: 0 10px;}
+}
+.dayOfWeek{width: 120px; height: 30px;padding-left: 10px;font-size: 16px; margin-top: 20px;}
+.myTip{display: inline-block;padding: 0 20px;color: #ff0000;}
+

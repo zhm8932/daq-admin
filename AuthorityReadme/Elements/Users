@@ -1,0 +1,20 @@
+//用户管理
+
+//账号管理列表
+
+账号-搜索   AccountSearch
+账号-详情   AccountDetail
+
+//账号管理详情
+
+账号-启用   AccountEnable
+账号-禁用   AccountDisable
+账号-查看历史头像   AccountAvatar
+
+账号-购买订单 AccountOrderList
+账号-预约订单 AccountBookList
+账号-门诊订单 AccountRegisterList
+账号-常用联系人    AccountContactList
+账号-常用地址 AccountAddressList
+账号-咨询记录 AccountChatsList
+

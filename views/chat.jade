@@ -1,0 +1,50 @@
+.chatBox#chatBox(data-customerAccId='',data-customerAccName='')
+   .chatRight
+      #chat01
+         .chat01_title
+            ul.talkTo
+               span#toUser
+               span.close 关闭
+         #chat-history.chat01_content
+            //-aside
+               div(style='text-align:left')
+                  p1 zhm0302
+                  p2 15:35:16<br>
+                  p3.chat-content-p3(classname='chat-content-p3') 你好,sdk本身已支持IE8+、FireFox、Chrome、Safari之间文本、表情、图片、音频消息相互发送
+               div(style='text-align:right')
+                  p1 zhm8932
+                  p2 15:36:16<br>
+                  p3.chat-content-p3(classname='chat-content-p3') sdk支持web端之间，web端与app端相互添加、删除好友功能
+               div(style='text-align:left')
+                  p1 zhm0302
+                  p2 15:35:16<br>
+                  p3.chat-content-p3(classname='chat-content-p3')
+                     |sdk对于消息的处理方式如下：<br>
+                     |1）文本消息，直接发送，接收方接收到为文本消息<br>
+                     |2）表情消息，sdk得到表情对应的编码后，发送的文本消息，接收方接收到后处理根据编码还
+
+      .chat02
+         .chat02_title
+            input#fileInput.none(type="file")
+            //span 消息回复
+            //span#fromUser.masterUser
+            a.chat02_title_btn.ctb01.emotion(title="选择表情")
+            input#sendEmotionInput.none
+            a.chat02_title_btn.ctb03.fileChoose(title="选择图片",onclick='send()')
+               input#sendPicInput.none
+            //a.chat02_title_btn.ctb02.fileChoose(title="选择语音")
+            //input#sendAudioInput.none
+            #wl_faces_box.wl_faces_box
+               .wl_faces_content
+                  .title
+                     ul
+                        li.wl_faces_close
+                           span &nbsp;
+                  #wl_faces_main.wl_faces_main
+                     ul#emotionUL
+         #input_content.chat02_content
+            textarea#chatContent(style="resize: none;")
+         .chat02_bar
+            ul
+               li
+                  button.btn.sendMsg 发送

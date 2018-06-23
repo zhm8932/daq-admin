@@ -1,0 +1,64 @@
+extends ../layout
+block content
+    link(href='/css/scheduling/scheduling_set_numbers.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：排班系统> 模板选择
+            section#content.scheduling
+                if !success
+                    aside #{JSON.stringify(data)}
+                else
+                    .formBox
+                        if !data.length
+                            table.table
+                                thead
+                                    tr
+                                        th(colspan='5')
+                                            span.lt
+                                                //input(type='radio',name='template_type')
+                                                strong 模板：
+                                                input(type='text' value='',disabled)
+                                            a.btn.rt(href='/scheduling/numbers/set_numbers/#{doctorId}')  选择
+                                    tr
+                                        th  开始时间
+                                        th  结束时间
+                                        th  放号数
+                                        th  挂号费用
+                                        th
+                                tbody
+                                    tr
+                                        td(colspan='5') 暂无模板
+                        else
+                          each item,index in data
+                            table.table(data-id=item.id)
+                                thead
+                                    tr
+                                        th(colspan='5')
+                                            span.lt
+                                                //input(type='radio',name='template_type')
+                                                strong 模板#{index + 1}：
+                                                input(type='text' value=item.name,disabled)
+                                            a.btn.rt(href='/scheduling/numbers/set_numbers/#{doctorId}?templateId=#{item.id}')  选择
+                                    tr
+                                        th  开始时间
+                                        th  结束时间
+                                        th  放号数
+                                        th  挂号费用
+                                tbody
+                                    if item.regSourceTemplateDetailDTOList
+                                        each arr in item.regSourceTemplateDetailDTOList
+                                            tr
+                                                td
+                                                    input.start(type='text',name='start',value=arr.start,readonly)
+                                                td
+                                                    input.end(type='text',name='end',value=arr.end,readonly)
+                                                td
+                                                    input.capacity(type='text',name='capacity',placeholder='放号数',value=arr.capacity,readonly)
+                                                td
+                                                    input.cost(type='text',name='cost',placeholder='挂号费',value=arr.cost/100,readonly)
+                                        else
+                                            tr
+                                                td(colspan='5') 暂无数据
+
+    include ../includes/footer

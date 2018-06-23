@@ -1,0 +1,72 @@
+@import "settings.scss";
+.btn.dangerBtn.none{
+  display:none;
+}
+.dataDic{
+  table{
+    word-break:break-all;
+    text-align: left;
+    tr:nth-child(2n){
+      background-color: #F0F0F0;
+    }
+    tr:hover,tr.success{
+      background-color: #e4ebf2;
+    }
+  }
+  .tab-nav{
+    margin-bottom:20px;
+    .hd{
+      width: 100%;border-radius: 6px; font-size:16px; margin-bottom:20px;//box-shadow: -1px 0 0 $bdrc2;
+      span{padding:0 20px;float: left;box-shadow: 0 0 0 1px $bdrc3; color: $bdrc3;cursor:pointer;
+        text-align: center; line-height: 36px;border-radius: 6px;
+        a{ display: block; color: #303030}
+        &.on{box-shadow: 0 0 0 1px $navBgColor; color: $navBgColor;
+          a{color: $navBgColor;}
+        }
+      }
+    }
+    .btn{@include btn($navBgColor,$navBgOnColor); line-height: 36px; float: right; margin: 0 0 10px 0}
+  }
+
+  .toolbar{
+    margin-bottom: 20px;display: inline-block;border-radius:5px;overflow: hidden;
+
+    span{
+      @include btn($navBgColor,$navBgOnColor);border-radius: 0px;border-left: 1px solid $bdrc1;margin: 0px;
+      &:hover{background-color:$navBgOnColor;color: $color-white}
+      &.usableBtn,&.dangerBtn{background-color:$bgc_red_d9;
+        &:hover{background-color: $bgc_red_ff;}
+      }
+      &.red{}
+      &.blue{background-color:$navBgOnColor;color: $color-white;
+        &:hover{background-color: #2782D8;}
+      }
+    }
+  }
+
+  .tip-box{
+    padding:12px 30px;
+    margin-bottom:30px;
+    border:1px solid #ddd;
+    background:#F5F5F5;
+    li{
+      line-height:20px;
+      list-style:disc;
+      margin-bottom:10px;
+    }
+  }
+}
+
+.popupBox.menuBox{
+  width:500px;
+  li{
+    padding:5px 0;
+    label{width:100px;text-align:right;padding-right:5px;display: inline-block;}
+    input{width:250px;}
+    textarea{width:220px;height:50px;}
+  }
+}
+
+.parentFileBox{
+  margin-left:100px;
+}

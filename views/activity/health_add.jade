@@ -1,0 +1,48 @@
+extends ../layout
+block content
+    link(href='/css/diyUpload.css',rel='styleSheet')
+    link(href='/css/banner_add.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：活动中心>套餐banner>健康科普新增banner
+            section#content.banner_add
+                div.formBox
+                    #container.imgUploadBox
+                        input#images(type='hidden',name='bannerObj[images]')
+                        span#selectfiles_images.btn 选择文件
+                        span#postfiles_images.btn 开始上传
+                    #previewImage_images.parentFileBox.clearfix
+                    ul
+                        li
+                            label 所属地区：
+                            select#category(name="bannerObj[category]")
+                                    option(value='1000') 健康科普
+                        li
+                            label 排序：
+                            input.displayOrder(type='text',name='bannerObj[displayOrder]',value='',placeholder='数字越小排序越靠前，默认为100')
+                        li
+                            label 描述（标题）
+                            input.descText(type='text',name='bannerObj[descText]')
+                        li
+                        .tabBox
+                            .hd
+                                span HTML页面
+                                    input(type='hidden',value='1')
+                                span APP内部页面
+                                    input(type='hidden',value='2')
+                            .con
+                                li
+                                    label HTML页面
+                                    input.link1(type='text',name='bannerObj[link]')
+                                li
+                                    label APP内部页面
+
+                                    input.link2(type='text',name='bannerObj[link]')
+                    div.cc
+                        button.submitBtn 提交
+                        span.red 提交后，需要从banner页发布才会在APP上展示
+
+    include ../includes/footer
+    script.
+        seajs.use('/js/banner.js')

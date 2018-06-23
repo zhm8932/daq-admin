@@ -1,0 +1,23 @@
+extends ../layout
+block content
+    link(href='/css/screenings/sample_storage.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：筛查业务>预约管理>样品入库
+            section#content
+                .formBox.storageForm
+                    ul
+                        li
+                            label 预约编号
+                            input.reservationId(type='search',name='reservationId',value='')
+                            span.sBtn.serchBtn.btn 查询
+                        li
+                            label 采样编码
+                            input.sampleCode(type='text',name='sampleCode',readonly=true)
+                            span.msg.red
+                        li
+                            button.btn.submitBtn 确定入库
+    include ../includes/footer
+    script.
+        seajs.use('/js/screenings/sample_storage.js')

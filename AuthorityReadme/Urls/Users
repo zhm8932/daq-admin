@@ -1,0 +1,10 @@
+//用户管理
+
+//账号管理
+
+账号管理-列表 /users/account
+账号管理-详情 /users/account/detail/*
+
+
+
+

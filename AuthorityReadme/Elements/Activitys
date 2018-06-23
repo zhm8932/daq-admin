@@ -1,0 +1,31 @@
+//活动中心
+
+//首页Banner
+
+首页Banner-新增 BannerIndexAdd
+首页Banner-编辑 BannerIndexEdit
+首页Banner-发布 BannerIndexRelease
+首页Banner-关闭 BannerIndexClose
+首页Banner-重新发布   BannerIndexRerelease
+
+首页Banner-列表-广州 BannerIndex_2140010948244539022
+首页Banner-列表-南京 BannerIndex_2140012014350639002
+首页Banner-列表-西安 BannerIndex_2140012017549908010
+首页Banner-列表-青岛 BannerIndex_2140012020391025014
+首页Banner-列表-深圳 BannerIndex_2140011010455652016
+首页Banner-列表-北京 BannerIndex_2140011111336224044
+
+
+//健康科普Banner
+
+健康科普Banner-新增   BannerHealthAdd
+健康科普Banner-编辑   BannerHealthEdit
+健康科普Banner-发布   BannerHealthRelease
+健康科普Banner-关闭   BannerHealthClose
+健康科普Banner-重新发布 BannerHealthRerelease
+
+//优惠券管理
+
+优惠券-搜索  CouponSearch
+优惠券-结束  CouponStop
+优惠券-详情  CouponDetail

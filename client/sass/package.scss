@@ -1,0 +1,25 @@
+@import "settings.scss";
+
+.formBox{
+  h3{ font-size: 18px; margin-bottom: 10px;}
+  label{width: 100px; text-align: right; display: inline-block; font-size: 16px;}
+  ul{
+    li {
+      margin-bottom: 10px;
+      input[type='text']{width: 300px;}
+      em{ padding-right: 20px;}
+      aside{display: inline-block;
+        input[type='text']{ margin:0 10px 10px 20px; width: 50px;}
+      }
+    }
+
+  }
+  textarea{
+    width: 300px; height: 300px; padding: 3px;
+  }
+  .submitBtn{
+    @include btn($navBgColor,$navBgOnColor);
+    margin: 20px 0 0 100px; padding: 5px 40px;font-size: 16px;
+  }
+
+}

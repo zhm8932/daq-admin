@@ -1,0 +1,67 @@
+extends ../layout
+block content
+    link(href='/css/kepu.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：健康科普>健康常识
+            section#content
+                if eleAuthority && eleAuthority.ArticleSearch
+                    form.search(action='/kepu/search',method='GET')
+                        lable 搜索：
+                        input(type='text',placeholder='可根据标题、内容搜索',name='tc',value=tc)
+                        lable 所属栏目：
+                        select#category(name='category')
+                        input(type='hidden',value='#{category}',id='selectedCat')
+                        lable 状态：
+                        select#publishState(name='status',value="#{postStatus}")
+                            option(value="publish") 发布中
+                            option(value="draft") 草稿
+                            option(value="pending") 取消发布
+                            input(type='hidden',value='#{status}',id='selectedPostStatus')
+                        button(type='submit') 搜索
+                        if eleAuthority && eleAuthority.ArticleAdd
+                            //-.addBtn.clearfix(role="articleListAdd",class="")
+                            a.btn.rt(href="/kepu/add") 新增文章
+                if !success
+                    aside #{data}
+                else
+                    ul.articleList
+                        if pagecount==0
+                            | 暂无数据
+                        else
+                            each item in data
+                                li
+                                    a(href='/kepu/detail?id=#{item.id}')
+                                        .listTitle.clearfix
+                                            span.lt #{item.title}
+                                            if (item.status == '1')
+                                                span.lt.recommendTip (推荐中)
+                                            span.rt
+                                                if(item.postStatus == 'publish')
+                                                    |发布中
+                                                else if(item.postStatus == 'draft')
+                                                    |草稿
+                                                else
+                                                    |取消发布
+                                        .listContent.clearfix
+                                            span 作者：#{item.author}
+                                            span 文章来源：#{item.source}
+                                            .lessArticle
+                                                |#{item.brief}
+
+                                            input(type='hidden',value='#{item.id}',class='idVal')
+                                            if (item.postStatus == 'publish' && eleAuthority && eleAuthority.ArticleCancelPublish)
+                                                input.btn.rt.cancelPub(type='button',value='取消发布')
+                                            else if(eleAuthority.ArticleEdit)
+                                                input.btn.rt.edit(type='button',value='编辑')
+
+                                            if (item.status == '1' && eleAuthority && eleAuthority.ArticleCancelRecommend)
+                                                input.btn.rt.cancelRec(type='button',value='取消推荐')
+                                            else if(eleAuthority && eleAuthority.ArticleRecommend)
+                                                input.btn.rt.recommend(type='button',value='推荐')
+
+                    include ../includes/pagination
+    include ../includes/footer
+        script.
+            seajs.use('/js/kepu_list.js')

@@ -1,0 +1,15 @@
+//筛查业务
+
+套餐管理-列表 /screening/meal/list/*
+套餐管理-详情 /screening/meal/detail/*
+套餐管理-修改 /screening/meal/update/*
+套餐管理-新增 /screening/meal/add
+
+
+预约管理-列表 /screening/booking/list/*
+预约管理-详情 /screening/booking/detail/*
+预约管理-样品入库 /screening/booking/sample_storage
+
+订单管理-列表 /screening/order/list/*
+订单管理-详情 /screening/order/detail/*
+

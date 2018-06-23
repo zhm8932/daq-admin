@@ -1,0 +1,73 @@
+extends ../layout
+block content
+    link(href='/css/user_detail.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：治疗业务>医生管理>医生详情
+            section#content
+
+                .detail
+                    dl.detail-main.doctor_detail.clearfix
+                        dt
+                            if data.doctorPhoto
+                                img(src='#{data.doctorPhoto}')
+                            else
+                                img(src='/images/user.png')
+                            p 医生状态：
+                                case data.doctorStatus
+                                    when 1
+                                        span.statue 正常
+                                    when 2
+                                        span.statue.red 禁用
+
+                        dd
+                            div
+                                p 编号：#{data.doctorCode}
+
+
+                                p 医生姓名：#{data.doctorName}
+                                p 联系电话：#{data.telephone}
+
+                                p 是否开通咨询：
+                                    if data.isConsult == false
+                                        | 否
+                                    else
+                                        em.red 是
+                                if get_account_detail_success
+                                    p 医生账号：#{get_account_detail.account}
+                                    p 账号来源：#{get_account_detail.origin}
+
+                            div
+                                p 所属门诊：
+                                    a(href='/treats/clinic/detail/#{data.hospitalReDepartments[0].hospitalId}' target='_blank',title='#{data.hospitalReDepartments[0].hospitalName}') #{data.hospitalReDepartments[0].hospitalName}
+                                p 所属科室：#{data.hospitalReDepartments[0].departmentName}
+                                p 职称： #{data.title}
+
+                                p 优医推荐：
+                                    if data.isRecommend == false
+                                        | 否
+                                    else
+                                        em.red 是
+                                p 是否收费：
+                                    case data.needPay
+                                        when true
+                                            em.red 是
+                                        when false
+                                            em 否
+                                p 挂号收费：#{parseFloat(data.cost/100).toFixed(2)}元
+                                if get_account_detail_success
+                            aside.clear
+                            p 履历：#{data.introduction}
+                            p 擅长：#{data.skill}
+
+                    //-.tab
+                        .hd.clearfix
+                            span: a(href='javascript:;') 咨询记录
+                            span: a(href='javascript:;') 门诊记录
+                            span: a(href='javascript:;') 排班信息
+
+
+    include ../includes/footer
+    //script.
+        seajs.use('/js/clinic_detail.js')

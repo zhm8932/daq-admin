@@ -1,0 +1,174 @@
+extends ../layout
+block content
+    link(href='/css/booking_detail.css',rel='styleSheet')
+    .container
+        include ../includes/nav
+        .main
+            .position 当前位置：筛查业务>预约管理>预约详情 - #{CONST.serviceTypeArr[data.serviceType]}
+            section#content
+                .detail-booking
+                    //h3 预约订单编号：#{JSON.stringify(data)}
+                    h3 预约编号：#{data.id}
+                    .statue.clearfix
+                        //- var statusInfo_Door_sampling = ['预约成功','护士取样','报告生成']
+                        //- var StatusInfo_Express_delivery = ['预约成功','物料寄出','回寄样本','收到样本','报告生成']
+                        //-" 1000-1xxx门诊取样。 选择产品：1000    预约成功：1100    已经登记：1200        收到样本：1300     报告生成：1900\n" +
+                          " 2000-2xxx上门取样。 选择产品：2000    预约成功：2100    已安排护士取样：2200  护士已取样：2300    收到样本：2400    报告生成 2900\n" +
+                          " 3000-3xxx快递取样。 选择产品：3000    预约成功：3100    物料寄出：3200        回寄样本：3300      收到样本：3400    报告生成：3900")
+                            服务方式：门诊取样：1    上门取样：2    快递取样：3
+                        //-上门取样
+                        //-- var statusInfo_Door_sampling = [{statue:2100,name:'预约成功'},{statue:2200,name:'已安排护士取样'},{statue:2300,name:'护士已取样'},{statue:2400,name:'收到样本'},{statue:2900,name:'报告生成'}]
+                        - var statusInfo_Door_sampling = [{statue:2100,name:'预约成功'},{statue:2150,name:'已安排护士取样'},{statue:2200,name:'护士已取样'},{statue:2300,name:'收到样本'},{statue:2900,name:'报告生成'}]
+                            //-快递取样
+                        - var statusInfo_Express_delivery = [{statue:3100,name:'预约成功'},{statue:3200,name:'物料寄出'},{statue:3300,name:'回寄样本'},{statue:3400,name:'收到样本'},{statue:3900,name:'报告生成'}]
+                            //-门诊取样
+                        //-- var statusInfo_Clinic_sample = [{statue:1100,name:'预约成功'},{statue:1200,name:'已经登记'},{statue:1300,name:'收到样本'},{statue:1900,name:'报告生成'}]
+                        - var statusInfo_Clinic_sample = [{statue:1100,name:'预约成功'},{statue:1150,name:'门诊登记'},{statue:1200,name:'收到样本'},{statue:1900,name:'报告生成'}]
+                        mixin statue_list(arr)
+                            - for(var i=0,len=arr.length;i<len;i++){
+                            if data.reservationStatus >= arr[i].statue
+                                li.on #{arr[i].name}
+                                    p <em></em>
+                            else
+                                li #{arr[i].name}
+                                    p <em></em>
+                            -}
+
+                        if data.serviceType
+                            //- 0：未选择服务方式；1：门诊取样 2：上门取样；3：快递取样
+                            case data.serviceType
+                                when 1
+                                    ul
+                                        +statue_list(statusInfo_Clinic_sample)
+                                        //li.on 预约成功
+                                        //    p <em></em>
+                                        //li 护士取样
+                                        //    p <em></em>
+                                        //li 收到样本
+                                        //    p <em></em>
+                                        //li 报告生成
+                                        // p <em></em>
+                                when 2
+                                    ul
+                                        +statue_list(statusInfo_Door_sampling)
+                                        //li.on 预约成功
+                                        //    p <em></em>
+                                        //li 物料寄出
+                                        //    p <em></em>
+                                        //li 回寄样本
+                                        //    p <em></em>
+                                        //li 收到样本
+                                        //    p <em></em>
+                                        //li 报告生成
+                                        //    p <em></em>
+                                when 3
+                                    //-ul
+                                        each arr,index in StatusInfo_Clinic_sample
+                                            span= index
+                                            //span= arr
+                                            if data.reservationStatus==2000
+                                            li #{arr.name}
+                                                p <em></em>
+                                    ul
+                                        +statue_list(statusInfo_Express_delivery)
+                                        //- for(var i=0,len=statusInfo_Express_delivery.length;i<len;i++){
+                                        //    if data.reservationStatus>statusInfo_Express_delivery[i].statue
+                                        //        li.on #{statusInfo_Express_delivery[i].name}
+                                        //            p <em></em>
+                                        //    else
+                                        //        li #{statusInfo_Express_delivery[i].name}
+                                        //            p <em></em>
+                                        //-}
+
+                                        //li 门诊就诊
+                                        //    p <em></em>
+                                        //li 报告生成
+                                        //    p <em></em>
+                            //-.line
+
+
+                    h3 基本信息
+                    p.lt 已选套餐：
+                      .inBlock
+                         if data.goodsInfo
+                             a(href='/screening/meal/detail/#{data.goodsInfo.id}',target='_blank',title=data.goodsInfo.goodsName) #{data.goodsInfo.goodsName}
+                             | (密码：#{data.password})
+                        //-if data.reservations
+                            each arr in data.reservations
+                                p
+                                  if arr.goodsInfo
+                                        a(href='/screening/meal/detail/#{arr.id}',target='_blank',title=arr.goodsInfo.goodsName) #{arr.goodsInfo.goodsName}
+                                        |(密码：#{arr.password})
+
+                    //-p 受  检  人：#{data.checkedName}
+                    //-p 联系电话：#{data.telNum}
+                    p 订单编号：
+                        if data.goodsInfo
+                            a(href='/screening/order/detail/#{data.goodsInfo.orderId}',target='_blank') #{data.goodsInfo.orderId}
+                        //-if data.reservations
+                            each arr in data.reservations
+                                if arr.goodsInfo
+                                    a(href='/screening/order/detail/#{arr.goodsInfo.orderId}',target='_blank') #{arr.goodsInfo.orderId}
+                    p 取样方式：
+                        if data.serviceType
+                            case data.serviceType
+                                when 0
+                                    em.red 未选择服务方式
+                                when 1
+                                    | 门诊取样
+                                when 2
+                                    | 上门取样
+                                when 3
+                                    | 快递取样
+                    p 服务门诊：
+                        if data.goodsInfo&&data.goodsInfo
+                            -hospital = JSON.parse(data.goodsInfo.hospital)
+                            | #{hospital.hospitalName}
+                    p 取样项目：
+                        if data.goodsInfo&&data.goodsInfo.transmitItems&&JSON.parse(data.goodsInfo.transmitItems)
+                              if data.goodsInfo.transmitItems
+                                - var transmitItemsArr = JSON.parse(data.goodsInfo.transmitItems);
+                                -for(var i=0,len=transmitItemsArr.length;i<len;i++){
+                                    if i<len
+                                        em #{transmitItemsArr[i].name}，#{transmitItemsArr[i].num}份，
+                                    else
+                                        em #{transmitItemsArr[i].name}，#{transmitItemsArr[i].num}
+
+                                -}
+                    if data.serviceType != 1
+                        p 取样地址：#{data.address}
+                    else
+                        p 就诊地址：#{data.address}
+
+                    p 采样编码 :#{data.sampleCode}
+
+                    h3 订单跟踪
+
+                    table.table_th
+                        thead
+                            tr
+                                th 处理时间
+                                th 处理信息
+                                th 操作人
+                        tbody
+                            if get_book_track
+                                if !get_book_track.length
+                                    tr
+                                        td(colspan='3') 暂无数据
+
+                                else
+                                    each item in get_book_track
+                                        tr
+                                            td #{moment(item.processTime).format('YYYY-MM-DD HH:mm:ss')}
+                                            td #{item.processInfo}
+                                            td #{item.operator}
+
+
+                    //h3 取样信息
+                    //p 采样编码 :j5224545
+                    //p 采样项目：
+                    //| 血样2份
+                    //| 尿液1份
+
+
+    include ../includes/footer

