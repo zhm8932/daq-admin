@@ -1,0 +1,7 @@
+node_modules/
+.git/
+.idea/
+public/.sass-cache/
+.DS_Store
+.sass-cache/
+public/
